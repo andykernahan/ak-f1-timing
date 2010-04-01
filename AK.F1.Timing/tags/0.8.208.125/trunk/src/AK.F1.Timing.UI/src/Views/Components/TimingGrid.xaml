@@ -1,0 +1,6 @@
+﻿<!-- DataContext: AK.F1.Timing.Model.Grid.GridModelBase -->
+<UserControl x:Class="AK.F1.Timing.UI.Views.Components.TimingGrid"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ContentControl Content="{Binding}"/>
+</UserControl>

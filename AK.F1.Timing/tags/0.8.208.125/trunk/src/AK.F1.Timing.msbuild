@@ -1,0 +1,268 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Build Properties -->
+
+  <PropertyGroup>
+    <BuildType Condition="'$(BuildType)'==''">Debug</BuildType>
+    <ForcedBuildProperties>Configuration=$(BuildType)</ForcedBuildProperties>
+    <CorePackageDependsOn>Clean;CleanBinPath;GetNextVersion;Build;Test</CorePackageDependsOn>
+  </PropertyGroup>
+  
+  <!-- Path Properties -->
+  
+  <PropertyGroup>
+    <BinPath>..\bin</BinPath>
+    <LibPath>..\lib</LibPath>
+    <ToolsPath>..\tools</ToolsPath>
+    <SrcPath>.</SrcPath>
+    <SolutionPath>$(SrcPath)\AK.F1.Timing.sln</SolutionPath>
+    <GlobalAssemblyInfoPath>$(SrcPath)\GlobalAssemblyInfo.cs</GlobalAssemblyInfoPath>
+    <GlobalAssemblyVersionPath>$(SrcPath)\GlobalAssemblyVersion.version</GlobalAssemblyVersionPath>
+    <MSBuildTasksPath>$(ToolsPath)\msbuild</MSBuildTasksPath>
+    <XUnitTasksPath>$(ToolsPath)\xunit</XUnitTasksPath>    
+    <UIBinPath>$(SrcPath)\AK.F1.Timing.UI\src\bin\$(BuildType)</UIBinPath>
+    <RecorderBinPath>$(SrcPath)\AK.F1.Timing.Live.Recorder\src\bin\$(BuildType)</RecorderBinPath>
+    <FixupBinPath>$(SrcPath)\AK.F1.Timing.Tms.Fixup\src\bin\$(BuildType)</FixupBinPath>
+    <TmsUtilityBinPath>$(SrcPath)\AK.F1.Timing.Tms.Utility\src\bin\$(BuildType)</TmsUtilityBinPath>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildTasksPath)\MSBuild.Community.tasks"/>
+  <Import Project="$(MSBuildTasksPath)\CodePlex.MSBuildTasks.tasks"/>
+  <Import Project="$(XUnitTasksPath)\XUnit.tasks"/>
+
+  <!-- Build server targets -->
+
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build"/>
+
+  <!-- Individiual targets -->
+
+  <Target Name="Clean">
+    <CreateItem Include="$(SrcPath)\*.Test.Results.xml">
+      <Output TaskParameter="Include" ItemName="CleanFileList"/>
+    </CreateItem>
+    <Delete
+      Files="@(CleanFileList)"/>
+    <MSBuild
+      Projects="$(SolutionPath)"
+      Targets="Clean"
+      Properties="$(ForcedBuildProperties)"/>
+  </Target>
+
+  <Target Name="Build">
+    <MSBuild
+      Projects="$(SolutionPath)"
+      Targets="Build"
+      Properties="$(ForcedBuildProperties)"/>
+  </Target>
+
+  <Target Name="Test" DependsOnTargets="Build">
+    <XunitProject ProjectFile="$(SrcPath)\AK.F1.Timing.$(BuildType).xunit"/>
+    <CreateItem Include="$(SrcPath)\*.Test.Results.xml">
+      <Output TaskParameter="Include" ItemName="TestXmlFiles"/>
+    </CreateItem>
+    <CombineXunitXml
+      InputFiles="@(TestXmlFiles)"
+      OutputFile="$(SrcPath)\AK.F1.Timing.Test.Results.xml"/>
+    <Delete Files="@(TestXmlFiles)"/>
+  </Target>
+
+  <Target Name="Help">
+    <MSBuild
+      Projects="$(SrcPath)\AK.F1.Timing.shfbproj"
+      Targets="Build"
+      Properties="$(ForcedBuildProperties)"/>
+  </Target>
+  
+  <Target Name="GetNextVersion">
+    <Version
+      Major="0"
+      Minor="8"
+      VersionFile="$(GlobalAssemblyVersionPath)"
+      RevisionType="Automatic"
+      BuildType="Increment">
+      <Output TaskParameter="Major" PropertyName="Major"/>
+      <Output TaskParameter="Minor" PropertyName="Minor"/>
+      <Output TaskParameter="Revision" PropertyName="Revision"/>
+      <Output TaskParameter="Build" PropertyName="Build"/>
+    </Version>
+    <PropertyGroup>
+      <GlobalAssemblyVersion>$(Major).$(Minor).$(Build).$(Revision)</GlobalAssemblyVersion>
+    </PropertyGroup>
+    <Message
+        Text="Version: $(GlobalAssemblyVersion)"/>
+    <RegexReplace
+      Pattern="AssemblyVersion\(&quot;.*&quot;\)"
+      Replacement="AssemblyVersion(&quot;$(GlobalAssemblyVersion)&quot;)"
+      Files="$(GlobalAssemblyInfoPath)"/>
+    <RegexReplace
+      Pattern="AssemblyFileVersion\(&quot;.*&quot;\)"
+      Replacement="AssemblyFileVersion(&quot;$(GlobalAssemblyVersion)&quot;)"
+      Files="$(GlobalAssemblyInfoPath)"/>
+  </Target>
+  
+  <Target Name="GetCurrentVersion">
+    <Version
+      VersionFile="$(GlobalAssemblyVersionPath)"
+      RevisionType="None"
+      BuildType="None">
+      <Output TaskParameter="Major" PropertyName="Major"/>
+      <Output TaskParameter="Minor" PropertyName="Minor"/>
+      <Output TaskParameter="Revision" PropertyName="Revision"/>
+      <Output TaskParameter="Build" PropertyName="Build"/>
+    </Version>
+    <PropertyGroup>
+      <GlobalAssemblyVersion>$(Major).$(Minor).$(Build).$(Revision)</GlobalAssemblyVersion>
+    </PropertyGroup>
+    <Message
+        Text="Version: $(GlobalAssemblyVersion)"/>
+  </Target>
+
+  <Target Name="CleanBinPath">
+    <RemoveDir
+      Directories="$(BinPath)"
+      Condition="Exists('$(BinPath)')"/>
+    <MakeDir
+      Directories="$(BinPath)"/>
+  </Target>
+
+  <Target
+    Name="Package"
+    DependsOnTargets="$(CorePackageDependsOn);PackageRecorder;PackageFixup;PackageTmsUtility;PackageUI"/>
+
+  <Target Name="PackageRecorder" DependsOnTargets="$(CorePackageDependsOn)">
+    <PropertyGroup>
+      <RecorderPackageName>f1recorder</RecorderPackageName>
+      <RecorderPackagePath>$(BinPath)\latest-$(RecorderPackageName)</RecorderPackagePath>
+      <RecorderPackageBinPath>$(RecorderPackagePath)\bin</RecorderPackageBinPath>
+    </PropertyGroup>
+    <ItemGroup>
+      <RecorderPackageRootFiles
+        Include="$(RecorderBinPath)\$(RecorderPackageName).*"
+        Exclude="$(RecorderBinPath)\*.pdb"/>
+      <RecorderPackageBinFiles
+        Include="$(RecorderBinPath)\*.*"
+        Exclude="@(RecorderPackageRootFiles);$(RecorderBinPath)\*.xml;$(RecorderBinPath)\*.pdb"/>
+    </ItemGroup>
+    <MakeDir
+      Directories="$(RecorderPackageBinPath)"/>
+    <Copy
+      SourceFiles="@(RecorderPackageRootFiles)"
+      DestinationFolder="$(RecorderPackagePath)"/>
+    <Copy
+      SourceFiles="@(RecorderPackageBinFiles)"
+      DestinationFolder="$(RecorderPackageBinPath)"/>
+    <ItemGroup>
+      <RecorderPackageFiles
+        Include="$(RecorderPackagePath)\**\*.*"/>
+    </ItemGroup>
+    <Zip
+      Files="@(RecorderPackageFiles)"
+      ZipFileName="$(BinPath)\$(RecorderPackageName)-v$(GlobalAssemblyVersion).zip"
+      WorkingDirectory="$(RecorderPackagePath)"
+      Flatten="false"
+      ZipLevel="10"/>
+  </Target>
+
+  <Target Name="PackageFixup" DependsOnTargets="$(CorePackageDependsOn)">
+    <PropertyGroup>
+      <FixupPackageName>f1fixup</FixupPackageName>
+      <FixupPackagePath>$(BinPath)\latest-$(FixupPackageName)</FixupPackagePath>
+      <FixupPackageBinPath>$(FixupPackagePath)\bin</FixupPackageBinPath>
+    </PropertyGroup>
+    <ItemGroup>
+      <FixupPackageRootFiles
+        Include="$(FixupBinPath)\$(FixupPackageName).*"
+        Exclude="$(FixupBinPath)\*.pdb"/>
+      <FixupPackageBinFiles
+        Include="$(FixupBinPath)\*.*"
+        Exclude="@(FixupPackageRootFiles);$(FixupBinPath)\*.xml;$(FixupBinPath)\*.pdb"/>
+    </ItemGroup>
+    <MakeDir
+      Directories="$(FixupPackageBinPath)"/>
+    <Copy
+      SourceFiles="@(FixupPackageRootFiles)"
+      DestinationFolder="$(FixupPackagePath)"/>
+    <Copy
+      SourceFiles="@(FixupPackageBinFiles)"
+      DestinationFolder="$(FixupPackageBinPath)"/>
+    <ItemGroup>
+      <FixupPackageFiles
+        Include="$(FixupPackagePath)\**\*.*"/>
+    </ItemGroup>
+    <Zip
+      Files="@(FixupPackageFiles)"
+      ZipFileName="$(BinPath)\$(FixupPackageName)-v$(GlobalAssemblyVersion).zip"
+      WorkingDirectory="$(FixupPackagePath)"
+      Flatten="false"
+      ZipLevel="10"/>
+  </Target>
+  
+  <Target Name="PackageTmsUtility" DependsOnTargets="$(CorePackageDependsOn)">
+    <PropertyGroup>
+      <TmsUtilityPackageName>f1tmsutility</TmsUtilityPackageName>
+      <TmsUtilityPackagePath>$(BinPath)\latest-$(TmsUtilityPackageName)</TmsUtilityPackagePath>
+      <TmsUtilityPackageBinPath>$(TmsUtilityPackagePath)\bin</TmsUtilityPackageBinPath>
+    </PropertyGroup>
+    <ItemGroup>
+      <TmsUtilityPackageRootFiles
+        Include="$(TmsUtilityBinPath)\$(TmsUtilityPackageName).*"
+        Exclude="$(TmsUtilityBinPath)\*.pdb"/>
+      <TmsUtilityPackageBinFiles
+        Include="$(TmsUtilityBinPath)\*.*"
+        Exclude="@(TmsUtilityPackageRootFiles);$(TmsUtilityBinPath)\*.xml;$(TmsUtilityBinPath)\*.pdb"/>
+    </ItemGroup>
+    <MakeDir
+      Directories="$(TmsUtilityPackageBinPath)"/>
+    <Copy
+      SourceFiles="@(TmsUtilityPackageRootFiles)"
+      DestinationFolder="$(TmsUtilityPackagePath)"/>
+    <Copy
+      SourceFiles="@(TmsUtilityPackageBinFiles)"
+      DestinationFolder="$(TmsUtilityPackageBinPath)"/>
+    <ItemGroup>
+      <TmsUtilityPackageFiles
+        Include="$(TmsUtilityPackagePath)\**\*.*"/>
+    </ItemGroup>
+    <Zip
+      Files="@(TmsUtilityPackageFiles)"
+      ZipFileName="$(BinPath)\$(TmsUtilityPackageName)-v$(GlobalAssemblyVersion).zip"
+      WorkingDirectory="$(TmsUtilityPackagePath)"
+      Flatten="false"
+      ZipLevel="10"/>
+  </Target>
+  
+  <Target Name="PackageUI" DependsOnTargets="$(CorePackageDependsOn)">
+    <PropertyGroup>
+      <UIPackageName>f1timing</UIPackageName>
+      <UIPackagePath>$(BinPath)\latest-$(UIPackageName)</UIPackagePath>
+      <UIPackageBinPath>$(UIPackagePath)\bin</UIPackageBinPath>
+    </PropertyGroup>
+    <ItemGroup>
+      <UIPackageRootFiles
+        Include="$(UIBinPath)\$(UIPackageName).*"
+        Exclude="$(UIBinPath)\*.pdb"/>
+      <UIPackageBinFiles
+        Include="$(UIBinPath)\*.*"
+        Exclude="@(UIPackageRootFiles);$(UIBinPath)\*.xml;$(UIBinPath)\*.pdb"/>
+    </ItemGroup>
+    <MakeDir
+      Directories="$(UIPackageBinPath)"/>
+    <Copy
+      SourceFiles="@(UIPackageRootFiles)"
+      DestinationFolder="$(UIPackagePath)"/>
+    <Copy
+      SourceFiles="@(UIPackageBinFiles)"
+      DestinationFolder="$(UIPackageBinPath)"/>
+    <ItemGroup>
+      <UIPackageFiles
+        Include="$(UIPackagePath)\**\*.*"/>
+    </ItemGroup>
+    <Zip
+      Files="@(UIPackageFiles)"
+      ZipFileName="$(BinPath)\$(UIPackageName)-v$(GlobalAssemblyVersion).zip"
+      WorkingDirectory="$(UIPackagePath)"
+      Flatten="false"
+      ZipLevel="10"/>
+  </Target>
+
+</Project>
