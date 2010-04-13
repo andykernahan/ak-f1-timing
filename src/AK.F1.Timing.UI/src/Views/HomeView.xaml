@@ -1,0 +1,61 @@
+<UserControl
+    x:Class="AK.F1.Timing.UI.Views.HomeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Caliburn="http://www.caliburnproject.org"
+    xmlns:Components="clr-namespace:AK.F1.Timing.UI.Views.Components">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="ErrorBrush" Color="Red"/>
+        <Style x:Key="LoginUsernameStyle" BasedOn="{StaticResource {x:Type TextBox}}" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsUsernameValid}" Value="False">
+                    <Setter Property="TextBox.BorderBrush" Value="{StaticResource ErrorBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="LoginPasswordStyle" BasedOn="{StaticResource {x:Type PasswordBox}}" TargetType="{x:Type PasswordBox}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsPasswordValid}" Value="False">
+                    <Setter Property="PasswordBox.BorderBrush" Value="{StaticResource ErrorBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="LoginButtonStyle" BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+            <Setter Property="Margin" Value="0,2,2,0"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>            
+        </Style>
+        <Style x:Key="LoginErrorMessageStyle" BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="0,5,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{StaticResource ErrorBrush}"/>
+            <Setter Property="Visibility" Value="{Binding HasLoginErrorMessage, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HiddenWhenFalseConverter}}"/>
+        </Style>
+    </UserControl.Resources>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-52.5,0,0">
+        <Components:F1Logo HorizontalAlignment="Center"/>
+        <GroupBox Width="285">
+            <GroupBox.Header>
+                <Label>Live-Timing Login</Label>
+            </GroupBox.Header>
+            <Grid Margin="2,4,0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Email" Style="{StaticResource FieldLabel}"/>
+                <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Style="{StaticResource LoginUsernameStyle}"/>
+                <TextBlock Text="Password" Grid.Row="1" Style="{StaticResource FieldLabel}"/>
+                <!-- Not sure why, but I have to explicity pass the data context. -->
+                <PasswordBox x:Name="Password" DataContext="{Binding}" PasswordChanged="OnPasswordChanged" Grid.Row="1" Grid.Column="1" Style="{StaticResource LoginPasswordStyle}"/>
+                <Button Content="Login" x:Name="Login" Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource LoginButtonStyle}"/>
+            </Grid>
+        </GroupBox>
+        <TextBlock Text="{Binding LoginErrorMessage}" Style="{StaticResource LoginErrorMessageStyle}"/>
+        <!-- <Button Content="Playback" x:Name="Playback"/> -->
+    </StackPanel>
+</UserControl>
