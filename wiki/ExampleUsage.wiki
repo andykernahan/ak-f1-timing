@@ -1,4 +1,5 @@
 #summary Examples showing simple usage
+#labels Featured
 
 ==Reading the live feed==
 
