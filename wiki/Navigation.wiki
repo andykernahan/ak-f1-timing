@@ -2,4 +2,4 @@
 
   * [Home]
   * [CoreTypes Core Types]
-  * [ExampleUsages Example Usages]
+  * [ExampleUsage Example Usage]
