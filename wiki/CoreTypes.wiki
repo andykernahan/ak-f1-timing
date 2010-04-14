@@ -21,4 +21,4 @@ Defines the functionality required to read messages from an underlying data stre
 
 ==F1Timing==
 
-Provides utility methods for creating message readers, both live and recorded. The usage of this type is covered in the [ExampleUsgae examples].
+Provides utility methods for creating message readers, both live and recorded. The usage of this type is covered in the [ExampleUsage examples].
