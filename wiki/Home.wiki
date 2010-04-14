@@ -1,4 +1,5 @@
 #summary Home page for F1 Live-Timing for .NET
+#labels Featured
 
 =F1 Live-Timing for .NET=
 
