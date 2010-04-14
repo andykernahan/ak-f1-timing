@@ -1,0 +1,17 @@
+#summary Examples usages
+
+The example below shows how to log into the live-timing feed, create a message read and read all messages until the end of the stream is reached.
+
+{{{
+Message message;
+// Log into the service.
+AuthenticationToken token = F1Timing.Live.Login("your-username", "your-password");
+// Create a message reader using the issued token.
+using(IMessageReader reader = F1Timing.Live.Read(token)) {
+    // Read all messages until the end of the stream is reached (indicated by a null message)
+    while((message = reader.Read()) != null) {
+        // Do something with the message.
+        Console.WriteLine(message);
+    }
+}
+}}}
