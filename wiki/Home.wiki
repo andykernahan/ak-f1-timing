@@ -19,3 +19,7 @@ During each session of a race weekend the live-timing feed generates a stream of
 The core library provided by this project allows you to easily read and consume these messages.
 
 *Note* that order to login to the live-timing feed you *must* have a valid username and password. You can register [http://www.formula1.com/live_timing/ here].
+
+==Getting Started==
+
+To get started you might want to review the [CoreTypes core types] and the [ExampleUsage examples].
