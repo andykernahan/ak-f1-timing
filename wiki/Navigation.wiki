@@ -1,3 +1,5 @@
 #summary Toc
 
   * [Home]
+  * [CoreTypes Core Types]
+  * [ExampleUsages Example Usages]
