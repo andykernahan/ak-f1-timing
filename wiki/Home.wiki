@@ -42,11 +42,11 @@ using(IMessageReader reader = F1Timing.Live.Read(token)) {
 
 ==Message==
 
-The abstract base class for all live-timing messages. Messages implement the [en.wikipedia.org/wiki/Visitor_pattern vistor pattern] allowing them to be easily processed.
+The abstract base class for all live-timing messages. Messages implement the [http://en.wikipedia.org/wiki/Visitor_pattern vistor pattern] allowing them to be easily processed.
 
 ==IMessageVisitor==
 
-The other half of the [en.wikipedia.org/wiki/Visitor_pattern vistor pattern]. The `MessageVisitor` class provides an empty implementation.
+The other half of the [http://en.wikipedia.org/wiki/Visitor_pattern vistor pattern]. The `MessageVisitor` class provides an empty implementation.
 
 ==IMessageReader==
 
