@@ -1,4 +1,5 @@
 #summary A description of the core exported types
+#labels Featured
 
 The API exported by the core library is relatively small and has only a few core concepts. This section provides an overview of the core types.
 
