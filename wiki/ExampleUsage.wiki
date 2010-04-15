@@ -61,3 +61,58 @@ using(IRecordedMessageReader reader = F1Timing.Playback.Read(path)) {
     }
 }
 }}}
+
+==Processing messages==
+
+The example belows shows how to process messages using a `SessionResultBuilder` which is a concrete `MessageVisitor` implementation. As the `SessionResultBuilder` processes messages it builds a dictionary of `Driver` instances each of which contains the driver's name and current position. Once the end of the message stream has been reached the result of the session is printed out.
+
+{{{
+
+    public static void Main(string[] args) {
+        Message message;
+        var builder = new SessionResultBuilder();
+        // CreateReader has been omitted for brevity.
+        using(var reader = CreateReader()) {
+            while((message = reader.Read()) != null) {
+                // Process the message.
+                builder.Accept(session);
+            }
+        }
+        // Print the result of the session to the console.
+        session.Print();
+    }
+
+    public class SessionResultBuilder : MessageVisitor
+    {
+        private IDictionary<int, Driver> _drivers = new Dictionary<int, Driver>();
+
+        public override void Visit(SetDriverNameMessage message) {
+            GetDriver(message).Name = message.DriverName;
+        }
+
+        public override void Visit(SetDriverPositionMessage message) {
+            GetDriver(message).Position = message.Position;
+        }
+
+        public void Print() {
+            foreach(var driver in _drivers.Values.OrderBy(x => x.Position)) {
+                Console.WriteLine("{0,-2} - {1}", driver.Position, driver.Name);
+            }
+        }
+
+        private Driver GetDriver(DriverMessageBase message) {
+            Driver driver = null;
+            if(!_drivers.TryGetValue(message.DriverId, out driver)) {
+                driver = new Driver();
+                _drivers.Add(message.DriverId, driver);
+            }
+            return driver;
+        }
+    }
+
+    public class Driver
+    {
+        public string Name { get; set; }
+        public int Position { get; set; }
+    }
+}}}
