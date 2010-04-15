@@ -19,7 +19,7 @@ using(IMessageReader reader = F1Timing.Live.Read(token)) {
 }
 }}}
 
-==Reading and record the live feed==
+==Reading and recording the live feed==
 
 The example below shows how to log into the live-timing feed, create a recording message reader and read all messages until the end of the stream is reached.
 
@@ -30,7 +30,7 @@ Message message;
 string path = "session.tms";
 // Log into the service.
 AuthenticationToken token = F1Timing.Live.Login("your-username", "your-password");
-// Create a message reader using the issued token and record the message to the given path.
+// Create a message reader using the issued token and record the messages to the given path.
 using(IMessageReader reader = F1Timing.Live.ReadAndRecord(token, path)) {
     // Read all messages until the end of the stream is reached (indicated by a null message)
     while((message = reader.Read()) != null) {
@@ -51,8 +51,8 @@ Message message;
 string path = "session.tms";
 // Create a message reader using the given path.
 using(IRecordedMessageReader reader = F1Timing.Playback.Read(path)) {
-    // An IRecordedMessageReader allows you to change the playback speed.
-    // For example, lets play this session back at 2x speed.
+    // An IRecordedMessageReader allows you to change the playback speed, for
+    // example, lets play this session back at 2x speed.
     reader.PlaybackSpeed = 2d;
     // Read all messages until the end of the stream is reached (indicated by a null message)
     while((message = reader.Read()) != null) {
@@ -75,7 +75,7 @@ The example belows shows how to process messages using a `SessionResultBuilder` 
         using(var reader = CreateReader()) {
             while((message = reader.Read()) != null) {
                 // Process the message.
-                builder.Accept(session);
+                message.Accept(builder);
             }
         }
         // Print the result of the session to the console.
