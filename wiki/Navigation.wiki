@@ -3,3 +3,4 @@
   * [Home]
   * [CoreTypes Core Types]
   * [ExampleUsage Example Usage]
+  * [F1Recorder F1Recorder]  
