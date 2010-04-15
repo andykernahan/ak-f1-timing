@@ -11,7 +11,7 @@ During each session of a race weekend the live-timing feed generates a stream of
 
 || *Category* || *Description* ||
 || [http://code.google.com/p/ak-f1-timing/source/browse/trunk/src/AK.F1.Timing/src/Messages/Driver/ Driver] || Messages which relate to a single driver in the session, such as the driver’s position, lap time, sector times and status. ||
-|| [http://code.google.com/p/ak-f1-timing/source/browse/trunk/src/AK.F1.Timing/src/Messages/Driver/Feed Feed] || Messages which relate to the current status of the live-timing feed, such as keyframe number, validity and system messages. ||
+|| [http://code.google.com/p/ak-f1-timing/source/browse/trunk/src/AK.F1.Timing/src/Messages/Feed/ Feed] || Messages which relate to the current status of the live-timing feed, such as keyframe number, validity and system messages. ||
 || [http://code.google.com/p/ak-f1-timing/source/browse/trunk/src/AK.F1.Timing/src/Messages/Driver/ Grid] || Messages which update the timing grid, such as setting the value and colour of a column or clearing a row.  ||
 || [http://code.google.com/p/ak-f1-timing/source/browse/trunk/src/AK.F1.Timing/src/Messages/Session/ Session] || Message which relate to the current session, such as the session type, status and remaining time. ||
 || [http://code.google.com/p/ak-f1-timing/source/browse/trunk/src/AK.F1.Timing/src/Messages/Weather/ Weather]|| Messages which relate to the current climatic conditions, such as track / air temperate, humidity, atmospheric pressure, wind speed and direction. ||
