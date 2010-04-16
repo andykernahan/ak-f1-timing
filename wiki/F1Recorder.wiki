@@ -2,7 +2,7 @@
 
 *f1recorder* is simple console app which records the live-timing feed so it can be played back at some later date.
 
-You can find the app in the bin directory once the project has been [Building built].
+You can find the app in the bin\latest-f1recorder directory once the project has been [Building built].
 
 ===Example usage===
 

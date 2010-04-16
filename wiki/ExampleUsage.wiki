@@ -1,6 +1,8 @@
 #summary Examples showing simple usage
 #labels Featured
 
+The examples below require a reference to the AK.F1.Timing.Core assembly which can be found in the bin\latest-f1core directory once the project has been [Building built].
+
 ==Reading the live feed==
 
 The example below shows how to log into the live-timing feed, create a message reader and read all messages until the end of the stream is reached.
