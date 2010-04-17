@@ -118,3 +118,7 @@ The example belows shows how to process messages using a `SessionResultBuilder` 
         public int Position { get; set; }
     }
 }}}
+
+Using this simple technique you can build expressive models that are cleanly seperated from the message source and messages.
+
+For a more complete example, please refer to the [ModelProject model project].
