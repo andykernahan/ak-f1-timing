@@ -66,7 +66,7 @@ using(IRecordedMessageReader reader = F1Timing.Playback.Read(path)) {
 
 ==Processing messages==
 
-The example belows shows how to process messages using a `SessionResultBuilder` which is a concrete `MessageVisitor`. As the `SessionResultBuilder` visits messages it builds a dictionary of `Driver` instances each of which contains the driver's name and current position. Once the end of the message stream has been reached the result of the session is printed out.
+The example belows shows how to process messages using a `SessionResultBuilder` which is a concrete `MessageVisitorBase`. As the `SessionResultBuilder` visits messages it builds a dictionary of `Driver` instances each of which contains the driver's name and current position. Once the end of the message stream has been reached the result of the session is printed out.
 
 {{{
 
@@ -84,7 +84,7 @@ The example belows shows how to process messages using a `SessionResultBuilder` 
         session.Print();
     }
 
-    public class SessionResultBuilder : MessageVisitor
+    public class SessionResultBuilder : MessageVisitorBase
     {
         private IDictionary<int, Driver> _drivers = new Dictionary<int, Driver>();
 
