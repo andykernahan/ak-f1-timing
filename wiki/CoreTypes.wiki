@@ -9,7 +9,7 @@ The abstract base class for all live-timing messages. Messages implement the [ht
 
 ==IMessageVisitor==
 
-The other half of the [http://en.wikipedia.org/wiki/Visitor_pattern vistor pattern]. The `MessageVisitorBase` type provides an abstract implementation were all 'Visit' methods are virtual and no-ops.
+The other half of the [http://en.wikipedia.org/wiki/Visitor_pattern vistor pattern]. The `MessageVisitorBase` type provides an abstract implementation where all `Visit` methods are virtual and no-ops.
 
 ==IMessageReader==
 
