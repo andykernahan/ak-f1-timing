@@ -22,4 +22,4 @@ The core library provided by this project allows you to easily read and consume 
 
 ==Getting started==
 
-To get started you might want to download the [http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt174&buildId=lastFinished&tab=artifacts&guest=1 latest build], review the [CoreTypes core types] and then run through [ExampleUsage examples].
+To get started you might want to download the [http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt174&buildId=lastFinished&tab=artifacts&guest=1 latest build], review the [CoreTypes core types] and then run through the [ExampleUsage examples].
