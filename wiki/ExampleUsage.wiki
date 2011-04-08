@@ -1,7 +1,7 @@
 #summary Examples showing simple usage
 #labels Featured
 
-The examples below require a reference to the AK.F1.Timing.Core assembly which can be found in the bin\latest-f1core directory once the project has been [Building built] or it can be downloaded from the [http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt174&buildId=lastSuccessful&tab=artifacts&guest=1 build server]
+The examples below require a reference to the AK.F1.Timing.Core assembly which can be found in the bin\latest-f1core directory once the project has been [Building built] or it can be downloaded from the [http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt174&buildId=lastSuccessful&tab=artifacts&guest=1 build server].
 
 ==Reading the live feed==
 
