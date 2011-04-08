@@ -6,15 +6,13 @@ You can find the app in the bin\latest-f1utils directory once the project has be
 
 ===Available Options===
 
-The following options are available:
-
 <dl>
     <dt>/dump</dt>
     <dd>Dumps the contents of the TMS file to the standard out.</dd>
     <dt>/dump-session</dt>
     <dd>Dumps the result of the session contained within the TMS file to the standard out.</dd>
     <dt>/stats</dt>
-    <dd>Prints statistical information about the TMS content, including the object type and instance count and average object length.</dd>
+    <dd>Prints statistical information about the TMS, including the object type and instance count and average object length.</dd>
     <dt>/fixup</dt>
     <dd>Filters out translated messages from the TMS and replays the session. Useful for when the translator has been modified. Note this overwrites the input TMS file.</dd>
 </dl>
