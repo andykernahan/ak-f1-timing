@@ -81,7 +81,7 @@ The example belows shows how to process messages using a `SessionResultBuilder` 
             }
         }
         // Print the result of the session to the console.
-        session.Print();
+        builder.Print();
     }
 
     public class SessionResultBuilder : MessageVisitorBase
