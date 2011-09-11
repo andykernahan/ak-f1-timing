@@ -1,1 +1,0 @@
-..\..\..\tools\xunit\xunit.console.exe bin\Debug\AK.F1.Timing.Model.Test.dll

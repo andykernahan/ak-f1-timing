@@ -1,1 +1,0 @@
-..\..\..\tools\xunit\xunit.console.clr4.exe bin\Debug\AK.F1.Timing.Server.Test.dll
