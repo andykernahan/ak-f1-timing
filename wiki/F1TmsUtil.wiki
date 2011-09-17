@@ -22,48 +22,51 @@ You can find the app in the bin\latest-f1utils directory once the project has be
 The example below show the app's output for the /stats option.
 
 {{{
-> f1tmsutil race.tms /stats
+> f1tmsutil stats race.tms
 +--------------------------------+----------+
 |File Name:                      |  race.tms|
-|File Length:                    |    962027|
-|Number of Objects:              |     47496|
-|Average Object Length:          |        20|
-|Number of Object Types:         |        37|
+|File Length:                    |    598705|
+|Number of Objects:              |     46761|
+|Average Object Length:          |        12|
+|Number of Object Types:         |        40|
 +--------------------------------+----------+
 |Object Type                     |     Count|
 +--------------------------------+----------+
-|SetGridColumnValueMessage       |     12860|
-|SetGridColumnColourMessage      |     12158|
-|SetNextMessageDelayMessage      |      5629|
-|SetDriverSectorTimeMessage      |      4884|
-|SetElapsedSessionTimeMessage    |      3573|
-|SetDriverIntervalMessage        |      1715|
-|SetDriverLapNumberMessage       |      1611|
-|SetDriverLapTimeMessage         |      1587|
-|SetDriverGapMessage             |      1045|
-|SetKeyframeMessage              |       469|
-|SetDriverPositionMessage        |       417|
-|ReplaceDriverSectorTimeMessage  |       319|
-|ReplaceDriverLapTimeMessage     |       191|
-|AddCommentaryMessage            |       182|
-|SetDriverStatusMessage          |       105|
-|StopSessionTimeCountdownMessage |        97|
-|SetRemainingSessionTimeMessage  |        97|
-|SetWindAngleMessage             |        72|
-|SetWindSpeedMessage             |        71|
-|SetRaceLapNumberMessage         |        71|
-|StartSessionTimeCountdownMessage|        54|
-|SetHumidityMessage              |        45|
-|SetSessionStatusMessage         |        42|
-|SetTrackTemperatureMessage      |        38|
-|SetDriverPitCountMessage        |        38|
-|SetDriverPitTimeMessage         |        38|
+|SetGridColumnValueMessage       |      7864|
+|SetNextMessageDelayMessage      |      7552|
+|SetGridColumnColourMessage      |      6673|
+|StopSessionTimeCountdownMessage |      5634|
+|SetRemainingSessionTimeMessage  |      5634|
+|SetElapsedSessionTimeMessage    |      2907|
+|SetDriverSectorTimeMessage      |      2630|
+|SetDriverSpeedMessage           |      1132|
+|SetDriverIntervalMessage        |      1032|
+|StartSessionTimeCountdownMessage|       944|
+|SetDriverLapNumberMessage       |       857|
+|SetDriverGapMessage             |       853|
+|SetDriverLapTimeMessage         |       845|
+|SetKeyframeMessage              |       437|
+|SetDriverPositionMessage        |       395|
+|ReplaceDriverSectorTimeMessage  |       318|
+|SpeedCaptureMessage             |       198|
+|ReplaceDriverLapTimeMessage     |       182|
+|AddCommentaryMessage            |       148|
+|SetDriverStatusMessage          |       110|
+|SetWindAngleMessage             |        70|
+|SetWindSpeedMessage             |        67|
+|SetRaceLapNumberMessage         |        53|
+|SetDriverPitCountMessage        |        42|
+|SetDriverPitTimeMessage         |        32|
+|SetHumidityMessage              |        28|
+|SetSessionStatusMessage         |        25|
 |SetDriverCarNumberMessage       |        24|
 |SetDriverNameMessage            |        24|
-|SetAtmosphericPressureMessage   |        23|
-|SetAirTemperatureMessage        |         8|
+|SetTrackTemperatureMessage      |        21|
+|SetAtmosphericPressureMessage   |        13|
+|SetAirTemperatureMessage        |         7|
 |SetPingIntervalMessage          |         2|
 |SetStreamValidityMessage        |         2|
+|SetStreamTimestampMessage       |         1|
 |SetSessionTypeMessage           |         1|
 |SetCopyrightMessage             |         1|
 |SetSystemMessageMessage         |         1|
