@@ -11,7 +11,7 @@ The app requires the name of the session to record and your live-timing username
 The example below show the app's output when no session it currently in progress.
 
 {{{
-> f1recorder no-session your-username your-password
+> f1recorder live your-username your-password no-session
 > 22:36:45.772: authenticating...
 > 22:36:46.368: authenticated your-username
 > 22:36:46.370: connecting...
