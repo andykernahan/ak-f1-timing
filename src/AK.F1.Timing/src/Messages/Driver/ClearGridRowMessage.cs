@@ -38,6 +38,13 @@ namespace AK.F1.Timing.Messages.Driver
         public ClearGridRowMessage(int driverId)
             : base(driverId) { }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public ClearGridRowMessage() : base(1) { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

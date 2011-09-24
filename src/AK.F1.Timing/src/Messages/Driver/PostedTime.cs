@@ -48,6 +48,13 @@ namespace AK.F1.Timing.Messages.Driver
             LapNumber = lapNumber;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public PostedTime() { }
+#endif
+
         /// <inheritdoc/>
         public int CompareTo(object obj)
         {

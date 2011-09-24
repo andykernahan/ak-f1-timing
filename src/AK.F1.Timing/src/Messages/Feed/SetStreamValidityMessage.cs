@@ -38,6 +38,13 @@ namespace AK.F1.Timing.Messages.Feed
             IsValid = isValid;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetStreamValidityMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

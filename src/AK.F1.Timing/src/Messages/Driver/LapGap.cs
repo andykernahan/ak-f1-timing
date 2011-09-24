@@ -47,6 +47,13 @@ namespace AK.F1.Timing.Messages.Driver
             Laps = laps;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public LapGap() { }
+#endif
+
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {

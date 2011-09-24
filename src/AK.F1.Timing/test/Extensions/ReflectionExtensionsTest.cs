@@ -67,13 +67,13 @@ namespace AK.F1.Timing.Extensions
 
         [Inherited]
         [Multiple(0)]
-        private class Parent {}
+        private class Parent { }
 
         [Multiple(1)]
-        private class Child : Parent {}
+        private class Child : Parent { }
 
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-        private sealed class MultipleAttribute : Attribute
+        private sealed class MultipleAttribute : System.Attribute
         {
             public MultipleAttribute(int order)
             {
@@ -84,6 +84,6 @@ namespace AK.F1.Timing.Extensions
         }
 
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-        private sealed class InheritedAttribute : Attribute {}
+        private sealed class InheritedAttribute : System.Attribute { }
     }
 }

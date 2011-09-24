@@ -20,7 +20,9 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Authentication;
+#if !SILVERLIGHT
 using AK.F1.Timing.Live;
+#endif
 using AK.F1.Timing.Messages.Driver;
 using AK.F1.Timing.Messages.Session;
 using AK.F1.Timing.Serialization;
@@ -112,7 +114,9 @@ namespace AK.F1.Timing
             if(!condition)
             {
                 Debug.Assert(condition, message);
+#if !SILVERLIGHT
                 Trace.Assert(condition, message);
+#endif
                 throw new InvalidProgramException(message);
             }
         }
@@ -145,7 +149,7 @@ namespace AK.F1.Timing
         {
             return new ArgumentOutOfRangeException(paramName);
         }
-
+#if !SILVERLIGHT
         private static SerializationException LiveMessageReader_UnsupportedMessage(LiveMessageHeader header, string classification)
         {
             return new SerializationException(Format(Resource.LiveMessageReader_UnsupportedMessage, header, classification));
@@ -165,7 +169,7 @@ namespace AK.F1.Timing
         {
             return LiveMessageReader_UnsupportedMessage(header, Resource.LiveMessageReader_MessageClassification_Weather);
         }
-
+#endif
         internal static SerializationException LiveData_UnableToConvertToSessionStatus(string s)
         {
             return new SerializationException(Format(Resource.LiveData_UnableToConvertToSessionStatus, s));

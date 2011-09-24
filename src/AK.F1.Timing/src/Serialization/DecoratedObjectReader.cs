@@ -15,6 +15,7 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Text;
 using AK.F1.Timing.Utility;
 
 namespace AK.F1.Timing.Serialization
@@ -39,8 +40,8 @@ namespace AK.F1.Timing.Serialization
         {
             Guard.NotNull(input, "input");
 
+            Input = new BinaryReader(input, Encoding.UTF8);
             Context = new StreamingContext(StreamingContextStates.All);
-            Input = DecoratedObjectWriter.CreateBinaryReader(input);
         }
 
         /// <inheritcdoc/>
@@ -179,7 +180,11 @@ namespace AK.F1.Timing.Serialization
                 case ObjectTypeCode.Double:
                     return Input.ReadDouble();
                 case ObjectTypeCode.Decimal:
+#if !SILVERLIGHT
                     return Input.ReadDecimal();
+#else
+                    throw new NotImplementedException();
+#endif
                 case ObjectTypeCode.DateTime:
                     return DateTime.FromBinary(Input.ReadInt64());
                 case ObjectTypeCode.String:

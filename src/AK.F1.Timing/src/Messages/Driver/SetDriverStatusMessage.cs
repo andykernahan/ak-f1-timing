@@ -42,6 +42,13 @@ namespace AK.F1.Timing.Messages.Driver
             DriverStatus = driverStatus;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetDriverStatusMessage() : base(1) { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

@@ -36,7 +36,13 @@ namespace AK.F1.Timing
 
         private static void exported_message_type_is_serializable(Type messageType)
         {
-            Assert.True(messageType.IsSerializable, string.Format(
+            var isSerializable = false;
+#if !SILVERLIGHT
+            isSerializable = messageType.IsSerializable;
+#else
+            isSerializable = messageType.GetCustomAttributes(typeof(SerializableAttribute), false).Length > 0;
+#endif
+            Assert.True(isSerializable, string.Format(
                 "Message type '{0}' should be serializable.",
                 messageType.FullName));
         }
@@ -103,14 +109,14 @@ namespace AK.F1.Timing
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                yield return new object[] {Message.Empty.GetType()};
+                yield return new object[] { Message.Empty.GetType() };
 
                 var types = typeof(Message).Assembly.GetExportedTypes()
                     .Where(x => typeof(Message).IsAssignableFrom(x));
 
                 foreach(var type in types)
                 {
-                    yield return new object[] {type};
+                    yield return new object[] { type };
                 }
             }
 

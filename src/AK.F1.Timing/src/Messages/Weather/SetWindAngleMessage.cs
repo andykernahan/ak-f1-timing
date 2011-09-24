@@ -41,6 +41,13 @@ namespace AK.F1.Timing.Messages.Weather
             Angle = angle;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetWindAngleMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

@@ -42,6 +42,13 @@ namespace AK.F1.Timing.Messages.Session
             Commentary = commentary;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public AddCommentaryMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

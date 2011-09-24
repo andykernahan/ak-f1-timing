@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+#if !SILVERLIGHT
 using System.Runtime.Serialization;
+#endif
 
 namespace AK.F1.Timing.Serialization
 {
@@ -66,8 +68,11 @@ namespace AK.F1.Timing.Serialization
         public static object GetUninitializedInstance(this Type type)
         {
             Guard.NotNull(type, "type");
-
+#if !SILVERLIGHT
             return FormatterServices.GetUninitializedObject(type);
+#else
+            return Activator.CreateInstance(type);
+#endif
         }
 
         #endregion
