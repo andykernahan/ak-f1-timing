@@ -136,7 +136,7 @@ namespace AK.F1.Timing
             {
                 return new ProxyMessageReader(endpoint);
             }
-
+#if !SILVERLIGHT
             /// <summary>
             /// Creates a message reader which reads from the proxy at the specified
             /// <paramref name="address"/> and records the messages to the specified
@@ -180,6 +180,7 @@ namespace AK.F1.Timing
             {
                 return new RecordingMessageReader(Read(endpoint), path);
             }
+#endif
         }
 
         /// <summary>
