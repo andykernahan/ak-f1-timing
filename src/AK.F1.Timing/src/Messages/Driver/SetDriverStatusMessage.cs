@@ -67,7 +67,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the driver's new status.
         /// </summary>
         [PropertyId(1)]
-        public DriverStatus DriverStatus { get; private set; }
+        public DriverStatus DriverStatus
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

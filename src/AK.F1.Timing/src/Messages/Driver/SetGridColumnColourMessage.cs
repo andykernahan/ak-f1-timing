@@ -66,13 +66,29 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the grid column to set the colour of.
         /// </summary>
         [PropertyId(1)]
-        public GridColumn Column { get; private set; }
+        public GridColumn Column
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// Gets the colour which to set the column.
         /// </summary>
         [PropertyId(2)]
-        public GridColumnColour Colour { get; private set; }
+        public GridColumnColour Colour
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

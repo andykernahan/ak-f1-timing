@@ -66,7 +66,15 @@ namespace AK.F1.Timing.Messages.Weather
         /// Gets the current humidity, as a percentage.
         /// </summary>
         [PropertyId(0)]
-        public double Humidity { get; private set; }
+        public double Humidity
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

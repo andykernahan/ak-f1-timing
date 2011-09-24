@@ -66,7 +66,15 @@ namespace AK.F1.Timing.Messages.Session
         /// Gets the remaining session time.
         /// </summary>
         [PropertyId(0)]
-        public TimeSpan Remaining { get; private set; }
+        public TimeSpan Remaining
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

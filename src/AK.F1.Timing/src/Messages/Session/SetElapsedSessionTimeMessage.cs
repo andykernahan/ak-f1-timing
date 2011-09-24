@@ -66,7 +66,15 @@ namespace AK.F1.Timing.Messages.Session
         /// Gets the elapsed session time.
         /// </summary>
         [PropertyId(0)]
-        public TimeSpan Elapsed { get; private set; }
+        public TimeSpan Elapsed
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

@@ -111,7 +111,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the number of laps represented by this gap.
         /// </summary>
         [PropertyId(0)]
-        public int Laps { get; private set; }
+        public int Laps
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

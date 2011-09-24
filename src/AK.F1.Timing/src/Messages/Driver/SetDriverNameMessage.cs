@@ -74,7 +74,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the driver's new name.
         /// </summary>
         [PropertyId(1)]
-        public string DriverName { get; private set; }
+        public string DriverName
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

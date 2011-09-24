@@ -69,7 +69,15 @@ namespace AK.F1.Timing.Messages.Session
         /// Gets the minimum required qualification time.
         /// </summary>
         [PropertyId(0)]
-        public TimeSpan Time { get; private set; }
+        public TimeSpan Time
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

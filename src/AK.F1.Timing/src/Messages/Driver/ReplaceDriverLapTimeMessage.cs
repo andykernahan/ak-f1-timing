@@ -71,7 +71,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the lap time replacement.
         /// </summary>
         [PropertyId(1)]
-        public PostedTime Replacement { get; private set; }
+        public PostedTime Replacement
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

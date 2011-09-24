@@ -68,13 +68,29 @@ namespace AK.F1.Timing.Messages.Session
         /// Gets the current <see cref="AK.F1.Timing.Messages.Session.SessionType"/>.
         /// </summary>
         [PropertyId(0)]
-        public SessionType SessionType { get; private set; }
+        public SessionType SessionType
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// Gets the current session identifier.
         /// </summary>
         [PropertyId(1)]
-        public string SessionId { get; private set; }
+        public string SessionId
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

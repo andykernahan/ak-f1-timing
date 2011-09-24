@@ -61,7 +61,15 @@ namespace AK.F1.Timing.Messages.Weather
         /// Gets a value indicating if the track is wet.
         /// </summary>
         [PropertyId(0)]
-        public bool IsWet { get; private set; }
+        public bool IsWet
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

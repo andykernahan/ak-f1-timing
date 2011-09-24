@@ -72,7 +72,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the pit time. The time includes the time taken to travel the length of the pit.
         /// </summary>
         [PropertyId(1)]
-        public PostedTime PitTime { get; private set; }
+        public PostedTime PitTime
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

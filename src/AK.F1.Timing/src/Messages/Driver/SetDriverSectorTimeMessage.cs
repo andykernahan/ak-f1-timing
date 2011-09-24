@@ -75,13 +75,29 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the sector number (one-based) of the posted time.
         /// </summary>
         [PropertyId(1)]
-        public int SectorNumber { get; private set; }
+        public int SectorNumber
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// Gets the posted sector time.
         /// </summary>
         [PropertyId(2)]
-        public PostedTime SectorTime { get; private set; }
+        public PostedTime SectorTime
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

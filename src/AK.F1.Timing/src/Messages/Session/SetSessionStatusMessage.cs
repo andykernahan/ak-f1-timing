@@ -63,7 +63,15 @@ namespace AK.F1.Timing.Messages.Session
         /// Gets the current <see cref="AK.F1.Timing.Messages.Session.SessionStatus"/>.
         /// </summary>
         [PropertyId(0)]
-        public SessionStatus SessionStatus { get; private set; }
+        public SessionStatus SessionStatus
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

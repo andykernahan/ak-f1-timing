@@ -63,7 +63,15 @@ namespace AK.F1.Timing.Messages.Feed
         /// Gets a valid indicating if the feed is valid.
         /// </summary>
         [PropertyId(0)]
-        public bool IsValid { get; private set; }
+        public bool IsValid
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

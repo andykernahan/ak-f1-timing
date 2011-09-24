@@ -62,7 +62,15 @@ namespace AK.F1.Timing.Messages.Weather
         /// Gets the current air temperature, in degrees celsius.
         /// </summary>
         [PropertyId(0)]
-        public double Temperature { get; private set; }
+        public double Temperature
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

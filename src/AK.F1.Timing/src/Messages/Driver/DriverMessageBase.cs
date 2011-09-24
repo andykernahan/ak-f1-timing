@@ -29,7 +29,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the Id of the driver this message relates to.
         /// </summary>
         [PropertyId(0)]
-        public int DriverId { get; private set; }
+        public int DriverId
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
 

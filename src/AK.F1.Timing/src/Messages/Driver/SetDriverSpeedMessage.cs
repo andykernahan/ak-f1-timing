@@ -71,13 +71,29 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the capture location
         /// </summary>
         [PropertyId(1)]
-        public SpeedCaptureLocation Location { get; private set; }
+        public SpeedCaptureLocation Location
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// Gets the captured speed.
         /// </summary>
         [PropertyId(2)]
-        public int Speed { get; private set; }
+        public int Speed
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

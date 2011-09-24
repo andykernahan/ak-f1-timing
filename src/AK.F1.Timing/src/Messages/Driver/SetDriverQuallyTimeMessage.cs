@@ -73,13 +73,29 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the qually time.
         /// </summary>
         [PropertyId(1)]
-        public TimeSpan QuallyTime { get; private set; }
+        public TimeSpan QuallyTime
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// Gets the qually number (one-based) of the posted time.
         /// </summary>
         [PropertyId(2)]
-        public int QuallyNumber { get; private set; }
+        public int QuallyNumber
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

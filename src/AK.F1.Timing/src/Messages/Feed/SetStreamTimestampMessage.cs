@@ -52,7 +52,15 @@ namespace AK.F1.Timing.Messages.Feed
         /// Gets the feed timestamp.
         /// </summary>
         [PropertyId(0)]
-        public DateTime Timestamp { get; private set; }
+        public DateTime Timestamp
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

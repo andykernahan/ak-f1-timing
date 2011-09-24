@@ -67,7 +67,15 @@ namespace AK.F1.Timing.Messages.Feed
         /// Gets the keyframe.
         /// </summary>
         [PropertyId(0)]
-        public int Keyframe { get; private set; }
+        public int Keyframe
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }
