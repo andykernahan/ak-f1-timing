@@ -41,6 +41,13 @@ namespace AK.F1.Timing.Messages.Weather
             Humidity = humidity;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetHumidityMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

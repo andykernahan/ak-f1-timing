@@ -13,9 +13,11 @@
 // limitations under the License.
 
 using System.Net;
+#if !SILVERLIGHT
 using AK.F1.Timing.Live;
 using AK.F1.Timing.Live.Encryption;
 using AK.F1.Timing.Live.IO;
+#endif
 using AK.F1.Timing.Playback;
 using AK.F1.Timing.Proxy;
 
@@ -28,7 +30,7 @@ namespace AK.F1.Timing
     public static class F1Timing
     {
         #region Public Interface.
-
+#if !SILVERLIGHT
         /// <summary>
         /// Provides methods for creating <see cref="AK.F1.Timing.IMessageReader"/>s which
         /// read from the live-timing message stream.
@@ -100,7 +102,7 @@ namespace AK.F1.Timing
                 return new RecordingMessageReader(Read(token), path);
             }
         }
-
+#endif
         /// <summary>
         /// Provides methods for creating <see cref="AK.F1.Timing.IMessageReader"/>s which
         /// read from proxied message streams.

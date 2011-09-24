@@ -16,4 +16,8 @@ using System.Reflection;
 
 [assembly: AssemblyTitle("F1 Timing Core Test")]
 [assembly: AssemblyDescription("F1 Timing Core Test Library")]
+#if !SILVERLIGHT
 [assembly: AssemblyProduct("AK.F1.Timing.Core.Test")]
+#else
+[assembly: AssemblyProduct("AK.F1.Timing.Core.Test.sl4")]
+#endif

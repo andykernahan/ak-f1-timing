@@ -42,6 +42,13 @@ namespace AK.F1.Timing.Messages.Feed
             Keyframe = keyframe;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetKeyframeMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

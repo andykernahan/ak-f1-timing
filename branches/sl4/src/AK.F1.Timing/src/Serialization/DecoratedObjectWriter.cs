@@ -34,36 +34,6 @@ namespace AK.F1.Timing.Serialization
 
         #endregion
 
-        #region Internal Interface.
-
-        /// <summary>
-        /// Creates a <see cref="System.IO.BinaryReader"/> suitable for reading data.
-        /// </summary>
-        /// <param name="input">The underlying input stream.</param>
-        /// <returns>A <see cref="System.IO.BinaryReader"/>.</returns>
-        internal static BinaryReader CreateBinaryReader(Stream input)
-        {
-            return new BinaryReader(input, TextEncoding);
-        }
-
-        /// <summary>
-        /// Creates a <see cref="System.IO.BinaryWriter"/> suitable for writing data.
-        /// </summary>
-        /// <param name="output">The underlying output stream.</param>
-        /// <returns>A <see cref="System.IO.BinaryWriter"/>.</returns>
-        internal static BinaryWriter CreateBinaryWriter(Stream output)
-        {
-            // TODO consider compression:
-            // - is it supported on .NETCF?
-            // - is it worth the memory overhead?
-            //   - average race session is < 1MiB
-            //   - what is the average tms compression ratio?
-            // - is the format likely to change? backwards compatibility is essential
-            return new BinaryWriter(output, TextEncoding);
-        }
-
-        #endregion
-
         #region Public Interface.
 
         /// <summary>
@@ -78,7 +48,7 @@ namespace AK.F1.Timing.Serialization
         {
             Guard.NotNull(output, "output");
 
-            Output = CreateBinaryWriter(output);
+            Output = new BinaryWriter(output, Encoding.UTF8);
             SeenHashCodes = new HashSet<int>();
         }
 
@@ -321,13 +291,21 @@ namespace AK.F1.Timing.Serialization
         private void WriteDateTime(DateTime value)
         {
             WriteObjectTypeCode(ObjectTypeCode.DateTime);
+#if !SILVERLIGHT
             Output.Write(value.ToBinary());
+#else
+            throw new NotSupportedException();
+#endif
         }
 
         private void WriteDecimal(decimal value)
         {
             WriteObjectTypeCode(ObjectTypeCode.Decimal);
+#if !SILVERLIGHT
             Output.Write(value);
+#else
+            throw new NotImplementedException();
+#endif
         }
 
         private void WriteDouble(double value)

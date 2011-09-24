@@ -79,7 +79,6 @@ namespace AK.F1.Timing.Serialization
         [Theory]
         [InlineData(typeof(SecurityException))]
         [InlineData(typeof(TargetException))]
-        [InlineData(typeof(TargetException))]
         [InlineData(typeof(ArgumentException))]
         [InlineData(typeof(TargetInvocationException))]
         [InlineData(typeof(TargetParameterCountException))]
@@ -88,7 +87,7 @@ namespace AK.F1.Timing.Serialization
         public void get_and_set_value_wraps_expected_exceptions(Type exceptionType)
         {
             var property = PropertyDescriptor.For(typeof(TypeWithThrowingProperty).GetProperty("Property"));
-            var component = new TypeWithThrowingProperty((Exception)FormatterServices.GetUninitializedObject(exceptionType));
+            var component = new TypeWithThrowingProperty((Exception)Activator.CreateInstance(exceptionType));
 
             Assert.Throws<SerializationException>(() => property.SetValue(component, null));
             Assert.Throws<SerializationException>(() => property.GetValue(component));

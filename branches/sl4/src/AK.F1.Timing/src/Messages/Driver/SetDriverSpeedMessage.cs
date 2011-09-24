@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using AK.F1.Timing.Messages.Session;
 using AK.F1.Timing.Serialization;
 
 namespace AK.F1.Timing.Messages.Driver
@@ -46,6 +45,13 @@ namespace AK.F1.Timing.Messages.Driver
             Location = location;
             Speed = speed;
         }
+
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetDriverSpeedMessage() : base(1) { }
+#endif
 
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)

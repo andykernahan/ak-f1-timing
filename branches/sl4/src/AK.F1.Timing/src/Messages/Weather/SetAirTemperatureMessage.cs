@@ -37,6 +37,13 @@ namespace AK.F1.Timing.Messages.Weather
             Temperature = temperature;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetAirTemperatureMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

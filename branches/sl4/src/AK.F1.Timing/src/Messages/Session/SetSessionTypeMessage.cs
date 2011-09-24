@@ -43,6 +43,13 @@ namespace AK.F1.Timing.Messages.Session
             SessionId = sessionId;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetSessionTypeMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

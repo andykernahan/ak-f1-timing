@@ -41,6 +41,13 @@ namespace AK.F1.Timing.Messages.Session
             Elapsed = elapsed;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetElapsedSessionTimeMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

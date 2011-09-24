@@ -47,6 +47,13 @@ namespace AK.F1.Timing.Messages.Driver
             Time = time;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public TimeGap() { }
+#endif
+
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {

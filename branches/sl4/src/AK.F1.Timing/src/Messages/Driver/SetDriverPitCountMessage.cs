@@ -43,6 +43,13 @@ namespace AK.F1.Timing.Messages.Driver
             PitCount = pitCount;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetDriverPitCountMessage() : base(1) { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

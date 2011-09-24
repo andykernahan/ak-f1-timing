@@ -43,6 +43,13 @@ namespace AK.F1.Timing.Messages.Driver
             LapNumber = lapNumber;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetDriverLapNumberMessage() : base(1) { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

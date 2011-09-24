@@ -44,6 +44,13 @@ namespace AK.F1.Timing.Messages.Session
             Time = time;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetMinRequiredQuallyTimeMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

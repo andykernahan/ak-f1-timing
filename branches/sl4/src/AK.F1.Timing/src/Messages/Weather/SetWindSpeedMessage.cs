@@ -42,6 +42,13 @@ namespace AK.F1.Timing.Messages.Weather
             Speed = speed;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetWindSpeedMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

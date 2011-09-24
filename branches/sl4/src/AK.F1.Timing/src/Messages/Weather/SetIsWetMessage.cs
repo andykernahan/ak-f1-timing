@@ -36,6 +36,13 @@ namespace AK.F1.Timing.Messages.Weather
             IsWet = isWet;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetIsWetMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

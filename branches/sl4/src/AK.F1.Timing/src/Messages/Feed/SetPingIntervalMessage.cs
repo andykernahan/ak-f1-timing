@@ -42,6 +42,13 @@ namespace AK.F1.Timing.Messages.Feed
             PingInterval = pingInterval;
         }
 
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetPingIntervalMessage() { }
+#endif
+
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {

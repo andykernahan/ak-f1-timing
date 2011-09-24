@@ -35,12 +35,20 @@ namespace AK.F1.Timing.Messages.Driver
         /// <param name="colour">The column colour value.</param>
         /// <param name="value">The column value.</param>
         public SetGridColumnValueMessage(int driverId, GridColumn column,
-            GridColumnColour colour, string value) : base(driverId)
+            GridColumnColour colour, string value)
+            : base(driverId)
         {
             Column = column;
             Colour = colour;
             Value = value;
         }
+
+#if SILVERLIGHT
+        /// <summary>
+        /// Required for Silverlight.
+        /// </summary>    
+        public SetGridColumnValueMessage() : base(1) { }
+#endif
 
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
