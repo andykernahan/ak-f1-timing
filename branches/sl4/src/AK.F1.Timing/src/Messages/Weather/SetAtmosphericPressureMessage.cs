@@ -67,7 +67,15 @@ namespace AK.F1.Timing.Messages.Weather
         /// Gets the current atmospheric pressure, in millibars.
         /// </summary>
         [PropertyId(0)]
-        public double Pressure { get; private set; }
+        public double Pressure
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

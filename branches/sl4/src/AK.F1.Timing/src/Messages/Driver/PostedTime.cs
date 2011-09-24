@@ -143,13 +143,29 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the lap number on which the time was posted.
         /// </summary>        
         [PropertyId(0)]
-        public int LapNumber { get; set; }
+        public int LapNumber
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// Gets the value of this posted time.
         /// </summary>
         [PropertyId(1)]
-        public TimeSpan Time { get; private set; }
+        public TimeSpan Time
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// Returns the value of this posted time in seconds.
@@ -164,7 +180,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the <see cref="AK.F1.Timing.Messages.Driver.PostedTimeType"/> of this posted time.
         /// </summary>
         [PropertyId(2)]
-        public PostedTimeType Type { get; private set; }
+        public PostedTimeType Type
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

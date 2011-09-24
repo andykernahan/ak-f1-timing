@@ -67,7 +67,15 @@ namespace AK.F1.Timing.Messages.Weather
         /// Gets the current wind speed, in metres per second.
         /// </summary>
         [PropertyId(0)]
-        public double Speed { get; private set; }
+        public double Speed
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

@@ -68,7 +68,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the driver's new position.
         /// </summary>
         [PropertyId(1)]
-        public int Position { get; private set; }
+        public int Position
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

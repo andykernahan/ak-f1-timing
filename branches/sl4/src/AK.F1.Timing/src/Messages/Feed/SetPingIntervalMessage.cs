@@ -67,7 +67,15 @@ namespace AK.F1.Timing.Messages.Feed
         /// Gets the ping interval.
         /// </summary>
         [PropertyId(0)]
-        public TimeSpan PingInterval { get; private set; }
+        public TimeSpan PingInterval
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

@@ -68,7 +68,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the driver's new car number.
         /// </summary>
         [PropertyId(1)]
-        public int CarNumber { get; private set; }
+        public int CarNumber
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

@@ -70,19 +70,43 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gest the column to set.
         /// </summary>
         [PropertyId(1)]
-        public GridColumn Column { get; private set; }
+        public GridColumn Column
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// Gets the colour which to set the column.
         /// </summary>
         [PropertyId(2)]
-        public GridColumnColour Colour { get; private set; }
+        public GridColumnColour Colour
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// Gets the value to set. Can be null.
         /// </summary>
         [PropertyId(3)]
-        public string Value { get; private set; }
+        public string Value
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// Returns a value indicating if the column should be cleared.

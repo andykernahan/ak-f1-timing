@@ -111,7 +111,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the <see cref="System.TimeSpan"/> represented by this gap.
         /// </summary>
         [PropertyId(0)]
-        public TimeSpan Time { get; private set; }
+        public TimeSpan Time
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

@@ -71,7 +71,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the posted lap time.
         /// </summary>
         [PropertyId(1)]
-        public PostedTime LapTime { get; private set; }
+        public PostedTime LapTime
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

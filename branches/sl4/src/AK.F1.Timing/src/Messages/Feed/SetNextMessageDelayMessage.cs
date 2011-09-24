@@ -67,7 +67,15 @@ namespace AK.F1.Timing.Messages.Feed
         /// Gets the delay between the next message.
         /// </summary>
         [PropertyId(0)]
-        public TimeSpan Delay { get; private set; }
+        public TimeSpan Delay
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

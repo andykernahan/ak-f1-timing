@@ -68,7 +68,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the lap number.
         /// </summary>
         [PropertyId(1)]
-        public int LapNumber { get; private set; }
+        public int LapNumber
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

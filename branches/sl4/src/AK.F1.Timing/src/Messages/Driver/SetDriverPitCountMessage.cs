@@ -68,7 +68,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the pit count.
         /// </summary>
         [PropertyId(1)]
-        public int PitCount { get; private set; }
+        public int PitCount
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

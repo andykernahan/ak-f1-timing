@@ -66,7 +66,15 @@ namespace AK.F1.Timing.Messages.Session
         /// Gets the current race lap number.
         /// </summary>
         [PropertyId(0)]
-        public int LapNumber { get; private set; }
+        public int LapNumber
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

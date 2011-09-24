@@ -71,7 +71,15 @@ namespace AK.F1.Timing.Messages.Driver
         /// Gets the gap.
         /// </summary>
         [PropertyId(1)]
-        public Gap Gap { get; private set; }
+        public Gap Gap
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

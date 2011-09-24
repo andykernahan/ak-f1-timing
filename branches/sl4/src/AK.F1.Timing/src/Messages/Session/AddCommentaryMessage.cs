@@ -67,7 +67,15 @@ namespace AK.F1.Timing.Messages.Session
         /// Gets the commentary text.
         /// </summary>        
         [PropertyId(0)]
-        public string Commentary { get; private set; }
+        public string Commentary
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

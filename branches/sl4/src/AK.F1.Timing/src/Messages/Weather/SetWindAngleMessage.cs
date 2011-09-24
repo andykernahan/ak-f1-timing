@@ -77,7 +77,15 @@ namespace AK.F1.Timing.Messages.Weather
         /// Gets the current wind angle, in degrees.
         /// </summary>
         [PropertyId(0)]
-        public int Angle { get; private set; }
+        public int Angle
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }

@@ -67,7 +67,15 @@ namespace AK.F1.Timing.Messages.Feed
         /// Gets the new copyright text.
         /// </summary>
         [PropertyId(0)]
-        public string Copyright { get; private set; }
+        public string Copyright
+        {
+            get;
+#if !SILVERLIGHT
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         #endregion
     }
