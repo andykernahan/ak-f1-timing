@@ -87,7 +87,7 @@ namespace AK.F1.Timing.Serialization
         public void get_and_set_value_wraps_expected_exceptions(Type exceptionType)
         {
             var property = PropertyDescriptor.For(typeof(TypeWithThrowingProperty).GetProperty("Property"));
-            var component = new TypeWithThrowingProperty((Exception)Activator.CreateInstance(exceptionType));
+            var component = new TypeWithThrowingProperty((Exception)FormatterServices.GetUninitializedObject(exceptionType));
 
             Assert.Throws<SerializationException>(() => property.SetValue(component, null));
             Assert.Throws<SerializationException>(() => property.GetValue(component));
