@@ -43,13 +43,6 @@ namespace AK.F1.Timing.Messages.Driver
             Value = value;
         }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public SetGridColumnValueMessage() : base(1) { }
-#endif
-
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {
@@ -116,6 +109,14 @@ namespace AK.F1.Timing.Messages.Driver
         {
             get { return Value == null; }
         }
+
+        #endregion
+
+        #region Internal Interface.
+
+#if SILVERLIGHT
+        internal SetGridColumnValueMessage() : base(1) { }
+#endif
 
         #endregion
     }

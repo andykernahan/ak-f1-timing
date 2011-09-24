@@ -34,13 +34,6 @@ namespace AK.F1.Timing.Messages.Session
         public static readonly StopSessionTimeCountdownMessage Instance =
             new StopSessionTimeCountdownMessage();
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public StopSessionTimeCountdownMessage() { }
-#endif
-
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {
@@ -70,6 +63,8 @@ namespace AK.F1.Timing.Messages.Session
 
 #if !SILVERLIGHT
         private StopSessionTimeCountdownMessage() { }
+#else
+        internal StopSessionTimeCountdownMessage() { }
 #endif
 
         #endregion

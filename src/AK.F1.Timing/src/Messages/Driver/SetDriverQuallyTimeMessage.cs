@@ -47,13 +47,6 @@ namespace AK.F1.Timing.Messages.Driver
             QuallyTime = quallyTime;
         }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public SetDriverQuallyTimeMessage() : base(1) { }
-#endif
-
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {
@@ -96,6 +89,14 @@ namespace AK.F1.Timing.Messages.Driver
             internal set;
 #endif
         }
+
+        #endregion
+
+        #region Internal Interface.
+
+#if SILVERLIGHT
+        internal SetDriverQuallyTimeMessage() : base(1) { }
+#endif
 
         #endregion
     }

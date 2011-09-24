@@ -37,13 +37,6 @@ namespace AK.F1.Timing.Messages.Weather
             Temperature = temperature;
         }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public SetTrackTemperatureMessage() { }
-#endif
-
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {
@@ -71,6 +64,14 @@ namespace AK.F1.Timing.Messages.Weather
             internal set;
 #endif
         }
+
+        #endregion
+
+        #region Internal Interface.
+
+#if SILVERLIGHT
+        internal SetTrackTemperatureMessage() { }
+#endif
 
         #endregion
     }

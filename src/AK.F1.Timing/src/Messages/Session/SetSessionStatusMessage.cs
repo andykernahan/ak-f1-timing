@@ -38,13 +38,6 @@ namespace AK.F1.Timing.Messages.Session
             SessionStatus = sessionStatus;
         }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public SetSessionStatusMessage() { }
-#endif
-
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {
@@ -72,6 +65,14 @@ namespace AK.F1.Timing.Messages.Session
             internal set;
 #endif
         }
+
+        #endregion
+
+        #region Internal Interface.
+
+#if SILVERLIGHT
+        internal SetSessionStatusMessage() { }
+#endif
 
         #endregion
     }

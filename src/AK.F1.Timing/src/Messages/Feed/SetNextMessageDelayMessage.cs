@@ -42,13 +42,6 @@ namespace AK.F1.Timing.Messages.Feed
             Delay = delay;
         }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public SetNextMessageDelayMessage() { }
-#endif
-
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {
@@ -76,6 +69,14 @@ namespace AK.F1.Timing.Messages.Feed
             internal set;
 #endif
         }
+
+        #endregion
+
+        #region Internal Interface.
+
+#if SILVERLIGHT
+        internal SetNextMessageDelayMessage() { }
+#endif
 
         #endregion
     }

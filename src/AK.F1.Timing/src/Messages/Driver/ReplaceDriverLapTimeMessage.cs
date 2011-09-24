@@ -46,13 +46,6 @@ namespace AK.F1.Timing.Messages.Driver
             Replacement = replacement;
         }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public ReplaceDriverLapTimeMessage() : base(1) { }
-#endif
-
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {
@@ -80,6 +73,14 @@ namespace AK.F1.Timing.Messages.Driver
             internal set;
 #endif
         }
+
+        #endregion
+
+        #region Internal Interface.
+
+#if SILVERLIGHT
+        internal ReplaceDriverLapTimeMessage() : base(1) { }
+#endif
 
         #endregion
     }

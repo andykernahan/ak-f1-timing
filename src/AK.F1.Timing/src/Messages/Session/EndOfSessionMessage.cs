@@ -41,13 +41,6 @@ namespace AK.F1.Timing.Messages.Session
             visitor.Visit(this);
         }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public EndOfSessionMessage() { }
-#endif
-
         /// <inheritdoc/>
         public override string ToString()
         {
@@ -69,6 +62,8 @@ namespace AK.F1.Timing.Messages.Session
 
 #if !SILVERLIGHT
         private EndOfSessionMessage() { }
+#else
+        internal EndOfSessionMessage() { }
 #endif
 
         #endregion
