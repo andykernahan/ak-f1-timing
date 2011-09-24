@@ -34,13 +34,6 @@ namespace AK.F1.Timing.Messages.Session
         public static readonly StartSessionTimeCountdownMessage Instance =
             new StartSessionTimeCountdownMessage();
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public StartSessionTimeCountdownMessage() { }
-#endif
-
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {
@@ -70,6 +63,8 @@ namespace AK.F1.Timing.Messages.Session
 
 #if !SILVERLIGHT
         private StartSessionTimeCountdownMessage() { }
+#else
+        internal StartSessionTimeCountdownMessage() { }
 #endif
 
         #endregion

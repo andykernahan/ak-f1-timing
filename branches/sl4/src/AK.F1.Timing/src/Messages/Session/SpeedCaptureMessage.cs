@@ -48,13 +48,6 @@ namespace AK.F1.Timing.Messages.Session
             Speeds = Array.AsReadOnly(speeds);
         }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public SpeedCaptureMessage() { }
-#endif
-
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {
@@ -94,6 +87,15 @@ namespace AK.F1.Timing.Messages.Session
         /// </summary>
         [PropertyId(1)]
         public IList<KeyValuePair<string, int>> Speeds { get; private set; }
+
+        #endregion
+
+
+        #region Internal Interface.
+
+#if SILVERLIGHT
+        internal SpeedCaptureMessage() { }
+#endif
 
         #endregion
 

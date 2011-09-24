@@ -42,13 +42,6 @@ namespace AK.F1.Timing.Messages.Feed
             Copyright = copyright;
         }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public SetCopyrightMessage() { }
-#endif
-
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {
@@ -76,6 +69,14 @@ namespace AK.F1.Timing.Messages.Feed
             internal set;
 #endif
         }
+
+        #endregion
+
+        #region Internal Interface.
+
+#if SILVERLIGHT
+        internal SetCopyrightMessage() { }
+#endif
 
         #endregion
     }

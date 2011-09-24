@@ -41,13 +41,6 @@ namespace AK.F1.Timing.Messages.Session
             Remaining = remaining;
         }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Required for Silverlight.
-        /// </summary>    
-        public SetRemainingSessionTimeMessage() { }
-#endif
-
         /// <inheritdoc/>
         public override void Accept(IMessageVisitor visitor)
         {
@@ -75,6 +68,14 @@ namespace AK.F1.Timing.Messages.Session
             internal set;
 #endif
         }
+
+        #endregion
+
+        #region Internal Interface.
+
+#if SILVERLIGHT
+        internal SetRemainingSessionTimeMessage() { }
+#endif
 
         #endregion
     }
