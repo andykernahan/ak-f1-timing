@@ -130,7 +130,7 @@ namespace AK.F1.Timing.Proxy
 
         private sealed class SocketStream : Stream
         {
-        #region Fields.
+            #region Fields.
 
             private readonly Socket _socket;
             private readonly SocketAsyncEventArgs _socketEvent;
@@ -142,7 +142,7 @@ namespace AK.F1.Timing.Proxy
 
             #endregion
 
-        #region Public Interface
+            #region Public Interface
 
             public SocketStream(Socket socket)
             {
@@ -224,7 +224,7 @@ namespace AK.F1.Timing.Proxy
 
             #endregion
 
-        #region Protected Interface.
+            #region Protected Interface.
 
             protected override void Dispose(bool disposing)
             {
@@ -243,7 +243,7 @@ namespace AK.F1.Timing.Proxy
 
             #endregion
 
-        #region Private Impl.
+            #region Private Impl.
 
             private bool FillBuffer()
             {
