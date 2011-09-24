@@ -1,4 +1,4 @@
-// Copyright 2009 Andy Kernahan
+﻿// Copyright 2011 Andy Kernahan
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Reflection;
+using Xunit;
 
-[assembly: AssemblyTitle("F1 Live-Timing Recorder for .NET 3.5")]
-[assembly: AssemblyDescription("F1 Live-Timing Recorder for .NET 3.5.")]
-[assembly: AssemblyProduct("AK.F1.Timing.Utility.LiveRecorder")]
+namespace AK.F1.Timing.Server.Extensions
+{
+    public class EnumerableExtensionsTest
+    {
+        [Fact]
+        public void action_is_invoked_on_each_item_in_the_collection()
+        {
+            int i = 0;
+            var items = new[] {
+                new object(),
+                new object(),
+                new object()
+            };
+            EnumerableExtensions.ForEach(items, actual =>
+            {
+                Assert.Same(items[i++], actual);
+            });
+        }
+    }
+}

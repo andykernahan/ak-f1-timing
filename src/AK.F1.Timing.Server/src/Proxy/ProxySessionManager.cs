@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using AK.F1.Timing.Serialization;
 using AK.F1.Timing.Server.Extensions;
 using AK.F1.Timing.Server.IO;
+using AK.F1.Timing.Server.Threading;
 using AK.F1.Timing.Utility;
 using log4net;
 
@@ -38,26 +39,28 @@ namespace AK.F1.Timing.Server.Proxy
     {
         #region Fields.
 
-        private readonly string _username;
-        private readonly string _password;
-
         private readonly CancellationToken _cancellationToken;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private Task _dispatchMessagesTask;
-        private readonly ManualResetEventSlim _dispatchMessagesCompleteEvent = new ManualResetEventSlim();
-        // 1 MiB is sufficient; the largest TMS, as of 2011-09-11, is 1073989 bytes (2011\07-canada).
-        private readonly ByteBuffer _messageHistory = new ByteBuffer(1024 * 1024);
-        private readonly ReaderWriterLockSlim _messageHistoryLock = new ReaderWriterLockSlim();
+        private Task _mainTask;
+        private readonly AutoResetEventSlim _wakeUpMainTask = new AutoResetEventSlim();
 
-        private Task _readMessagesTask;
-        // TODO consider specifying a bounded capacity.
-        private readonly BlockingCollection<byte[]> _readMessageQueue = new BlockingCollection<byte[]>();
+        // Prevent the session queues from growing unwieldy by an placing arbitrary upper bound
+        // on the capacity of the message dispatch queue. This has the effect of limiting the
+        // number of messages processsed per cycle when there are active sessions.
+        private const int DispatchMessagesCapacity = 32;
+        private readonly Queue<byte[]> _dispatchMessages = new Queue<byte[]>(DispatchMessagesCapacity);
+        // 1 MiB is sufficient; largest TMS, as of 2011-09-11, is 1073989 bytes (2011\07-canada\race.tms).
+        private readonly ByteBuffer _dispatchedMessageHistory = new ByteBuffer(1024 * 1024);
 
         private int _nextSessionId;
         private readonly IDictionary<int, ProxySession> _sessions = new Dictionary<int, ProxySession>();
-        private readonly ReaderWriterLockSlim _sessionsLock = new ReaderWriterLockSlim();
-        private readonly ManualResetEventSlim _sessionsEmptyEvent = new ManualResetEventSlim(true);
+        private readonly BlockingCollection<ProxySession> _sessionsPendingStart = new BlockingCollection<ProxySession>();
+        private readonly BlockingCollection<ProxySession> _sessionsPendingRemove = new BlockingCollection<ProxySession>();
+
+        private Task _readMessagesTask;
+        private readonly IMessageReader _messageReader;
+        private readonly BlockingCollection<byte[]> _pendingMessages = new BlockingCollection<byte[]>();
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ProxySessionManager));
 
@@ -67,29 +70,24 @@ namespace AK.F1.Timing.Server.Proxy
 
         /// <summary>
         /// Initilises a new instance of the <see cref="AK.F1.Timing.Server.Proxy.ProxySessionManager"/>
-        /// class and specifies the <paramref name="username"/> and <paramref name="password"/> of the
-        /// user to autenticate as.
+        /// class and specified the source <see cref="AK.F1.Timing.IMessageReader"/>.
         /// </summary>
-        /// <param name="username">The user's live-timing username.</param>
-        /// <param name="password">The user's live-timing password.</param>
+        /// <param name="reader">The source <see cref="AK.F1.Timing.IMessageReader"/>.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="username"/> or <paramref name="password"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">
-        /// Thrown when <paramref name="username"/> or <paramref name="password"/> is empty.
-        /// </exception>
-        public ProxySessionManager(string username, string password)
+        /// Thrown when <paramref name="reader"/> is <see langword="null"/>.
+        /// </exception>        
+        public ProxySessionManager(IMessageReader reader)
         {
-            Guard.NotNullOrEmpty(username, "username");
-            Guard.NotNullOrEmpty(password, "password");
+            Guard.NotNull(reader, "reader");
 
-            _username = username;
-            _password = password;
+            _messageReader = reader;
             _cancellationToken = _cancellationTokenSource.Token;
-            _dispatchMessagesTask = new Task(DispatchMessages, _cancellationToken);
-            _dispatchMessagesTask.Start();
-            _readMessagesTask = new Task(ReadMessages, _cancellationToken);
+            _readMessagesTask = new Task(ReadMessagesTask, _cancellationToken);
+            _readMessagesTask.ContinueFaultWith(_ => Dispose());
             _readMessagesTask.Start();
+            _mainTask = new Task(MainTask, _cancellationToken);
+            _mainTask.ContinueFaultWith(_ => Dispose());
+            _mainTask.Start();
         }
 
         /// <inheritdoc/>
@@ -98,7 +96,7 @@ namespace AK.F1.Timing.Server.Proxy
             CheckDisposed();
             Guard.NotNull(client, "client");
 
-            StartSession(client);
+            AddPendingStart(client);
         }
 
         #endregion
@@ -108,23 +106,25 @@ namespace AK.F1.Timing.Server.Proxy
         /// <inheritdoc/>
         protected override void DisposeOfManagedResources()
         {
-            Log.Info("stopping");
+            Log.Info("stopping tasks");
             _cancellationTokenSource.Cancel();
-            Task.WaitAll(_dispatchMessagesTask, _readMessagesTask);
-            if(!_sessionsEmptyEvent.IsSet)
+            try
             {
-                Log.Info("stopping sessions");
-                ForEachSession(DisposeOf, throwIfCancellationRequested: false);
-                _sessionsEmptyEvent.Wait();
+                Task.WaitAll(_mainTask, _readMessagesTask);
             }
+            catch(AggregateException) { }
+            Log.Info("stopping sessions");
+            _sessionsPendingStart.ForEach(DisposeOf);
+            ForEachSession(DisposeOf, throwIfCancellationRequested: false);
+            ProcessPendingRemoves();
             DisposeOf(_cancellationTokenSource);
-            DisposeOf(_dispatchMessagesCompleteEvent);
-            DisposeOf(_dispatchMessagesTask);
-            DisposeOf(_messageHistoryLock);
+            DisposeOf(_mainTask);
+            DisposeOf(_messageReader);
             DisposeOf(_readMessagesTask);
-            DisposeOf(_readMessageQueue);
-            DisposeOf(_sessionsEmptyEvent);
-            DisposeOf(_sessionsLock);
+            DisposeOf(_pendingMessages);
+            DisposeOf(_sessionsPendingStart);
+            DisposeOf(_sessionsPendingRemove);
+            DisposeOf(_wakeUpMainTask);
             Log.Info("stopped");
         }
 
@@ -132,13 +132,11 @@ namespace AK.F1.Timing.Server.Proxy
 
         #region Private Impl.
 
-        private void ReadMessages()
+        private void ReadMessagesTask()
         {
             Log.Info("read task started");
             try
             {
-                using(var reader = F1Timing.Live.Read(F1Timing.Live.Login(_username, _password)))
-                //using(var reader = F1Timing.Playback.Read(@"D:\dev\.net\src\ak-f1-timing\tms\2011\11-hungary\race.tms"))
                 using(var buffer = new MemoryStream(4096))
                 using(var writer = new DecoratedObjectWriter(buffer))
                 {
@@ -146,128 +144,168 @@ namespace AK.F1.Timing.Server.Proxy
                     do
                     {
                         ThrowIfCancellationRequested();
-                        message = reader.Read();
+                        message = _messageReader.Read();
                         buffer.SetLength(0L);
                         writer.WriteMessage(message);
-                        _readMessageQueue.Add(buffer.ToArray());
+                        _pendingMessages.Add(buffer.ToArray());
+                        _wakeUpMainTask.Set();
                     } while(message != null);
+                    _pendingMessages.CompleteAdding();
+                    _wakeUpMainTask.Set();
                 }
+                Log.InfoFormat("completed reading messages");
             }
             catch(OperationCanceledException) { }
             catch(Exception exc)
             {
                 Log.Fatal(exc);
+                throw;
             }
             finally
             {
-                _readMessageQueue.CompleteAdding();
                 Log.Info("read task stopped");
             }
         }
 
-        private void DispatchMessages()
+        private void MainTask()
         {
-            Log.Info("dispatch task started");
+            Log.Info("main task started");
             try
             {
-                byte[] message;
-                // Prevent the session queues from growing unwieldy by an placing arbitrary upper bound
-                // on the capacity of the dispatch queue.
-                const int dispatchQueueCapacity = 32;
-                var dispatchQueue = new Queue<byte[]>(dispatchQueueCapacity);
-                while(_readMessageQueue.TryTake(out message, Timeout.Infinite, _cancellationToken))
+                var completedActiveSessions = false;
+                while(!_cancellationToken.IsCancellationRequested)
                 {
-                    dispatchQueue.Clear();
-                    _messageHistoryLock.InWriteLock(() =>
+                    _wakeUpMainTask.Wait(_cancellationToken);
+                    ProcessPendingRemoves();
+                    if(!_pendingMessages.IsCompleted)
                     {
-                        do
-                        {
-                            dispatchQueue.Enqueue(message);
-                            _messageHistory.Append(message);
-                        } while(dispatchQueue.Count < dispatchQueueCapacity &&
-                            _readMessageQueue.TryTake(out message, 0, _cancellationToken));
-                        ForEachSession(session => session.SendAsync(dispatchQueue));
-                    });
+                        ProcessPendingMessages();
+                    }
+                    else if(!completedActiveSessions)
+                    {
+                        ForEachSession(session => session.CompleteAsync());
+                        completedActiveSessions = true;
+                    }
+                    ProcessPendingStarts(_pendingMessages.IsCompleted);
                 }
-                _dispatchMessagesCompleteEvent.Set();
-                ForEachSession(session => session.CompleteAsync());
             }
             catch(OperationCanceledException) { }
             catch(Exception exc)
             {
                 Log.Fatal(exc);
+                throw;
             }
             finally
             {
-                _dispatchMessagesCompleteEvent.Set();
-                Log.Info("dispatch task stopped");
+                Log.Info("main task stopped");
             }
         }
 
-        private void StartSession(Socket client)
+        private void ProcessPendingMessages()
         {
-            var session = CreateSession(client);
-            // Lock order is critical to prevent duplicate message buffers from being sent.
-            _messageHistoryLock.InReadLock(() =>
+            if(_pendingMessages.Count == 0)
             {
-                _sessionsLock.InWriteLock(() =>
+                return;
+            }
+            byte[] message;
+            while(_dispatchMessages.Count < DispatchMessagesCapacity &&
+                _pendingMessages.TryTake(out message, 0, _cancellationToken))
+            {
+                if(_sessions.Count > 0)
                 {
-                    _sessions.Add(session.Id, session);
-                    session.SendAsync(_messageHistory.CreateSnapshot());
-                    if(_dispatchMessagesCompleteEvent.IsSet)
+                    _dispatchMessages.Enqueue(message);
+                }
+                _dispatchedMessageHistory.Append(message);
+            }
+            if(_dispatchMessages.Count > 0)
+            {
+                ForEachSession(session =>
+                {
+                    session.SendAsync(_dispatchMessages);
+                    if(_pendingMessages.IsCompleted)
                     {
                         session.CompleteAsync();
                     }
-                    Log.InfoFormat("started, id={0}, endpoint={1}, open={2}",
-                        session.Id, client.RemoteEndPoint, _sessions.Count);
-                    _sessionsEmptyEvent.Reset();
                 });
-            });
+                _dispatchMessages.Clear();
+            }
         }
 
-        private ProxySession CreateSession(Socket client)
+        private void AddPendingStart(Socket client)
         {
             var session = new ProxySession(NextSessionId(), client);
             session.Disposed += OnSessionDisposed;
-            return session;
+            _sessionsPendingStart.Add(session);
+            _wakeUpMainTask.Set();
+        }
+
+        private void ProcessPendingStarts(bool completeSessions)
+        {
+            if(_sessionsPendingStart.Count == 0)
+            {
+                return;
+            }
+            ProxySession session;
+            while(_sessionsPendingStart.TryTake(out session, 0, _cancellationToken))
+            {
+                if(session.IsDisposed)
+                {
+                    continue;
+                }
+                try
+                {
+                    session.SendAsync(_dispatchedMessageHistory.CreateSnapshot());
+                    if(completeSessions)
+                    {
+                        session.CompleteAsync();
+                    }
+                    _sessions.Add(session.Id, session);
+                    Log.InfoFormat("started, id={0}, open={1}", session.Id, _sessions.Count);
+                }
+                catch(ObjectDisposedException) { }
+            }
         }
 
         private void OnSessionDisposed(object sender, EventArgs e)
         {
             var session = (ProxySession)sender;
             session.Disposed -= OnSessionDisposed;
-            _sessionsLock.InWriteLock(() =>
+            _sessionsPendingRemove.Add(session);
+            _wakeUpMainTask.Set();
+        }
+
+        private void ProcessPendingRemoves()
+        {
+            if(_sessionsPendingRemove.Count == 0)
+            {
+                return;
+            }
+            ProxySession session;
+            while(_sessionsPendingRemove.TryTake(out session, 0))
             {
                 _sessions.Remove(session.Id);
                 Log.InfoFormat("removed, id={0}, open={1}", session.Id, _sessions.Count);
-                if(_sessions.Count == 0)
-                {
-                    _sessionsEmptyEvent.Set();
-                }
-            });
+            }
         }
 
         private void ForEachSession(Action<ProxySession> action, bool throwIfCancellationRequested = true)
         {
-            _sessionsLock.InReadLock(() =>
+            foreach(var session in _sessions.Values)
             {
-                foreach(var session in _sessions.Values)
+                if(throwIfCancellationRequested)
                 {
-                    if(throwIfCancellationRequested)
-                    {
-                        ThrowIfCancellationRequested();
-                    }
-                    try
-                    {
-                        action(session);
-                    }
-                    catch(ObjectDisposedException)
-                    {
-                        // The session may have been disposed of whilst we hold the read lock and
-                        // therefore couldn't remove itself from the collection.
-                    }
+                    ThrowIfCancellationRequested();
                 }
-            });
+                if(session.IsDisposed)
+                {
+                    continue;
+                }
+                try
+                {
+                    action(session);
+                }
+                catch(ObjectDisposedException) { }
+            }
         }
 
         private void ThrowIfCancellationRequested()
@@ -277,8 +315,12 @@ namespace AK.F1.Timing.Server.Proxy
 
         private int NextSessionId()
         {
-            // TODO not sure what to do on overflow, seems unlikely...
             return Interlocked.Increment(ref _nextSessionId);
+        }
+
+        private void Dispose()
+        {
+            Dispose(true);
         }
 
         #endregion

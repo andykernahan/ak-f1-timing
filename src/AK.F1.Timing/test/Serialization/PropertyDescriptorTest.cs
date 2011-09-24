@@ -175,34 +175,34 @@ namespace AK.F1.Timing.Serialization
             public int Property { get; set; }
         }
 
-        [TypeId(59414808)]
+        [TypeId(245)]
         private sealed class TypeWithUndecoratedProperty
         {
             public int Property { get; set; }
         }
 
-        [TypeId(31739516)]
+        [TypeId(244)]
         private sealed class TypeWithPropertyWithPublicGetAndPrivateSet
         {
             [PropertyId(0)]
             public int Property { set; private get; }
         }
 
-        [TypeId(98239245)]
+        [TypeId(243)]
         private sealed class TypeWithPropertyWithPrivateGetAndPublicSet
         {
             [PropertyId(0)]
             public int Property { private set; get; }
         }
 
-        [TypeId(65526584)]
+        [TypeId(242)]
         private sealed class TypeWithPropertyWithPublicGetAndPublicSet
         {
             [PropertyId(1)]
             public int Property { get; set; }
         }
 
-        [TypeId(-80807557)]
+        [TypeId(241)]
         private sealed class TypeWithPropertyWithNoGet
         {
             [PropertyId(0)]
@@ -212,7 +212,7 @@ namespace AK.F1.Timing.Serialization
             }
         }
 
-        [TypeId(-40412810)]
+        [TypeId(240)]
         private sealed class TypeWithPropertyWithNoSet
         {
             [PropertyId(1)]
@@ -222,7 +222,7 @@ namespace AK.F1.Timing.Serialization
             }
         }
 
-        [TypeId(61112946)]
+        [TypeId(239)]
         private sealed class TypeWithSameProperties1
         {
             [PropertyId(0)]
@@ -241,7 +241,7 @@ namespace AK.F1.Timing.Serialization
             public int Property5 { get; set; }
         }
 
-        [TypeId(32378927)]
+        [TypeId(238)]
         private sealed class TypeWithSameProperties2
         {
             [PropertyId(0)]
@@ -260,17 +260,17 @@ namespace AK.F1.Timing.Serialization
             public int Property5 { get; set; }
         }
 
-        [TypeId(-40412810)]
+        [TypeId(237)]
         private class TypeWithProperty
         {
             [PropertyId(0)]
             public int Property { get; set; }
         }
 
-        [TypeId(-98367102)]
+        [TypeId(236)]
         private class ChildType : TypeWithProperty { }
 
-        [TypeId(152582013)]
+        [TypeId(235)]
         private class TypeWithThrowingProperty
         {
             private readonly Exception _exception;
