@@ -86,12 +86,10 @@
     <Compile Include="Playback\RecordedMessageDelayEngine.cs" />
     <Compile Include="Playback\RecordedMessageReader.cs" />
     <Compile Include="Messages\Feed\SetNextMessageDelayMessage.cs" />
-    <Compile Include="Serialization\DecoratedObjectWriter.cs" />
     <Compile Include="Serialization\IObjectReader.cs" />
     <Compile Include="Serialization\IgnorePropertyAttribute.cs" />
     <Compile Include="Serialization\DecoratedObjectReader.cs" />
     <Compile Include="Serialization\ICustomSerializable.cs" />
-    <Compile Include="Serialization\IObjectWriter.cs" />
     <Compile Include="Serialization\ObjectTypeCode.cs" />
     <Compile Include="Serialization\PropertyDescriptor.cs" />
     <Compile Include="Serialization\PropertyDescriptorCollection.cs" />
