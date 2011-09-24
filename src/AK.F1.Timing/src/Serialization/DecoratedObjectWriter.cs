@@ -28,12 +28,6 @@ namespace AK.F1.Timing.Serialization
     /// </summary>
     public sealed class DecoratedObjectWriter : DisposableBase, IObjectWriter
     {
-        #region Fields.
-
-        private static readonly Encoding TextEncoding = Encoding.UTF8;
-
-        #endregion
-
         #region Public Interface.
 
         /// <summary>
@@ -291,21 +285,13 @@ namespace AK.F1.Timing.Serialization
         private void WriteDateTime(DateTime value)
         {
             WriteObjectTypeCode(ObjectTypeCode.DateTime);
-#if !SILVERLIGHT
             Output.Write(value.ToBinary());
-#else
-            throw new NotSupportedException();
-#endif
         }
 
         private void WriteDecimal(decimal value)
         {
             WriteObjectTypeCode(ObjectTypeCode.Decimal);
-#if !SILVERLIGHT
             Output.Write(value);
-#else
-            throw new NotImplementedException();
-#endif
         }
 
         private void WriteDouble(double value)

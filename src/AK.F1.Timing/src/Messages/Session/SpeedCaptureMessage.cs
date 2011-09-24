@@ -98,7 +98,7 @@ namespace AK.F1.Timing.Messages.Session
         #endregion
 
         #region Explicit Interface.
-
+#if !SILVERLIGHT
         void ICustomSerializable.Write(IObjectWriter writer)
         {
             Guard.NotNull(writer, "writer");
@@ -111,7 +111,7 @@ namespace AK.F1.Timing.Messages.Session
                 writer.Write(speed.Value);
             }
         }
-
+#endif
         void ICustomSerializable.Read(IObjectReader reader)
         {
             Guard.NotNull(reader, "reader");

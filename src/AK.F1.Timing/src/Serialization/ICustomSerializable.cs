@@ -19,6 +19,7 @@ namespace AK.F1.Timing.Serialization
     /// </summary>
     public interface ICustomSerializable
     {
+#if !SILVERLIGHT
         /// <summary>
         /// Serializes this object using the specified <paramref name="writer"/>.
         /// </summary>
@@ -27,7 +28,7 @@ namespace AK.F1.Timing.Serialization
         /// Thrown when <paramref name="writer"/> is <see langword="null"/>.
         /// </exception>
         void Write(IObjectWriter writer);
-
+#endif
         /// <summary>
         /// Deserializes this object using the specified <paramref name="reader"/>.
         /// </summary>
