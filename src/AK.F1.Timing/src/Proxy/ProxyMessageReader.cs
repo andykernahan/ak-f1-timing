@@ -39,7 +39,7 @@ namespace AK.F1.Timing.Proxy
         /// <summary>
         /// Defines the default proxy port. This field is constant.
         /// </summary>
-        public const int DefaultPort = 50192;
+        public const int DefaultPort = 4532;
 
         #endregion
 
@@ -91,7 +91,7 @@ namespace AK.F1.Timing.Proxy
             try
             {
                 Log.InfoFormat("connecting: {0}", _endpoint);
-                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                _socket = new Socket(_endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 #if !SILVERLIGHT
                 _socket.Connect(_endpoint);
                 _reader = new DecoratedObjectReader(new BufferedStream(new NetworkStream(_socket)));
