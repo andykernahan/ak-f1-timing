@@ -114,6 +114,7 @@ namespace AK.F1.Timing.Proxy
             using(var e = new SocketAsyncEventArgs())
             using(var completed = new ManualResetEvent(false))
             {
+                e.SocketClientAccessPolicyProtocol = SocketClientAccessPolicyProtocol.Http;
                 e.RemoteEndPoint = endpoint;
                 e.UserToken = completed;
                 e.Completed += delegate { completed.Set(); };
