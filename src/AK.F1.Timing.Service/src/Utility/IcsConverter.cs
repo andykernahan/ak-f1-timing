@@ -91,6 +91,7 @@ namespace AK.F1.Timing.Service.Utility
                 case "Silverstone, England":
                     return "great-britain";
                 case "Hockenheim":
+                case "Nurburgring":
                     return "german";
                 case "Budapest":
                     return "hungary";
