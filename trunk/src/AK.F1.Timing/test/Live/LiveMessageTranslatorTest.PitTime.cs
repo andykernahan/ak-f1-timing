@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using AK.F1.Timing.Messages.Driver;
 using AK.F1.Timing.Messages.Session;
 using Xunit;
@@ -74,7 +73,7 @@ namespace AK.F1.Timing.Live
                 Assert.False(driver.IsExpectingPitTimes);
             });
         }
-
+#if TRANSLATOR_PARSE_SECTOR_TIMES
         [Fact]
         public void when_a_driver_is_expecting_pit_times_sector_3_column_values_are_translated_into_set_pit_time_messages()
         {
@@ -92,7 +91,7 @@ namespace AK.F1.Timing.Live
                 Assert.False(driver.IsExpectingPitTimes);
             });
         }
-
+#endif
         [Fact]
         public void when_a_driver_is_expecting_pit_times_sector_1_and_2_column_updates_are_not_translated()
         {

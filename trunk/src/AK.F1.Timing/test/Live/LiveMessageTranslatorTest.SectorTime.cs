@@ -44,7 +44,7 @@ namespace AK.F1.Timing.Live
                 Assert.Null(translator.Translate(message));
             });
         }
-
+#if TRANSLATOR_PARSE_SECTOR_TIMES
         [Theory]
         [ClassData(typeof(AllSessionTypes))]
         public void when_a_driver_is_on_the_track_then_sector_1_column_values_are_translated_into_set_sector_time_messages(SessionType session)
@@ -107,7 +107,7 @@ namespace AK.F1.Timing.Live
                 // We don't assert the other types here as it is sufficiently covered by the sector 1 test.
             });
         }
-
+#endif
         [Fact(Skip = "TODO")]
         public void sector_3_column_values_in_a_race_session_are_translated_into_set_sector_time_and_set_driver_completed_laps_messages() { }
 
@@ -115,7 +115,7 @@ namespace AK.F1.Timing.Live
         [ClassData(typeof(AllSectorGridColumns_AllSessionTypes))]
         public void when_a_driver_is_not_on_the_track_then_sector_time_column_colours_are_not_translated_into_set_sector_time_messages(
             GridColumn sector, SessionType session) { }
-
+#if TRANSLATOR_PARSE_SECTOR_TIMES
         [Theory]
         [ClassData(typeof(AllSessionTypes))]
         public void when_a_driver_is_on_the_track_in_sector_1_then_sector_1_column_colours_are_translated_into_a_set_sector_time_message(
@@ -139,7 +139,7 @@ namespace AK.F1.Timing.Live
                 Assert.Equal(2, driver.CurrentSectorNumber);
             });
         }
-
+#endif
         [Theory]
         [ClassData(typeof(AllSessionTypes))]
         public void when_a_driver_is_on_the_track_in_sector_1_then_sector_2_column_colours_are_not_translated_into_a_set_sector_time_message(
@@ -156,7 +156,7 @@ namespace AK.F1.Timing.Live
                 Assert.Null(translator.Translate(new SetGridColumnColourMessage(1, GridColumn.S2, GridColumnColour.White)));
             });
         }
-
+#if TRANSLATOR_PARSE_SECTOR_TIMES
         [Theory]
         [ClassData(typeof(AllSessionTypes))]
         public void when_a_driver_is_on_the_track_in_sector_1_then_sector_3_column_colours_are_translated_into_a_replace_sector_3_time_message(
@@ -226,7 +226,7 @@ namespace AK.F1.Timing.Live
                 Assert.Equal(2, driver.CurrentSectorNumber);
             });
         }
-
+#endif
         [Theory]
         [ClassData(typeof(AllSessionTypes))]
         public void when_a_driver_is_on_the_track_in_sector_1_and_the_sector_1_column_has_no_value_then_sector_2_column_clears_are_not_translated_into_set_sector_time_messages(

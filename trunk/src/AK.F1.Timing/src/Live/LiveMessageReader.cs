@@ -332,7 +332,7 @@ namespace AK.F1.Timing.Live
         {
             ReadAndDecryptBytes(header.DataLength);
 
-            var value = DecodeLatin1(header.DataLength);
+            var value = DecodeUtf8(header.DataLength);
 
             return new SetGridColumnValueMessage(
                 header.DriverId,

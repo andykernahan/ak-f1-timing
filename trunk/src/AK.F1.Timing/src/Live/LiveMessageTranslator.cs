@@ -245,12 +245,14 @@ namespace AK.F1.Timing.Live
             {
                 switch(message.Column)
                 {
+#if TRANSLATOR_PARSE_SECTOR_TIMES
                     case GridColumn.S1:
                         return TranslateSetSectorClear(message, 1);
                     case GridColumn.S2:
                         return TranslateSetSectorClear(message, 2);
                     case GridColumn.S3:
                         return TranslateSetSectorClear(message, 3);
+#endif
                     default:
                         return null;
                 }
@@ -305,12 +307,14 @@ namespace AK.F1.Timing.Live
                     return TranslateSetLapTimeColour(message);
                 case GridColumn.Gap:
                     return TranslateSetGapTimeColour(message);
+#if TRANSLATOR_PARSE_SECTOR_TIMES
                 case GridColumn.S1:
                     return TranslateSetSectorTimeColour(message, 1);
                 case GridColumn.S2:
                     return TranslateSetSectorTimeColour(message, 2);
                 case GridColumn.S3:
                     return TranslateSetSectorTimeColour(message, 3);
+#endif
                 case GridColumn.Interval:
                     return TranslateSetIntervalTimeColour(message);
                 default:
@@ -453,6 +457,7 @@ namespace AK.F1.Timing.Live
             {
                 return CreateStatusMessageIfChanged(driver, DriverStatus.Stopped);
             }
+#if TRANSLATOR_PARSE_SECTOR_TIMES
             if(driver.IsExpectingPitTimes)
             {
                 return TranslateSetPitTimeValue(message, sectorNumber);
@@ -482,8 +487,12 @@ namespace AK.F1.Timing.Live
             return TranslateSetDriverSectorTimeMessage(
                 new SetDriverSectorTimeMessage(driver.Id, sectorNumber,
                     new PostedTime(newTime, newTimeType, driver.LapNumber)));
+#else
+            return null;
+#endif
         }
 
+#if TRANSLATOR_PARSE_SECTOR_TIMES
         private Message TranslateSetSectorTimeColour(SetGridColumnColourMessage message, int sectorNumber)
         {
             var driver = GetDriver(message);
@@ -563,6 +572,7 @@ namespace AK.F1.Timing.Live
             return new SetDriverPitTimeMessage(driver.Id,
                 new PostedTime(LiveData.ParseTime(message.Value), PostedTimeType.Normal, Math.Max(driver.LapNumber - 1, 0)));
         }
+#endif
 
         private static Message TranslateSetNameValue(SetGridColumnValueMessage message)
         {
